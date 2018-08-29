@@ -1,8 +1,6 @@
 // POLLING EXAMPLE(ATmega162)
 // 8 buttons connected to PORTA, 8 leds to PORTB
-#ifndef F_CPU
-#define F_CPU 4915200UL
-#endif
+#include "cpu_info.h"
 
 #include <avr/io.h>
 #include <util/delay.h>
