@@ -29,11 +29,11 @@ entity address_decoder is
 end address_decoder;
 
 architecture behave of address_decoder is begin
-	if (a11) then
+	if (a11 = '1') then
 		ram_cs <= '1';
-	elsif (a10) then
+	elsif (a10 = '1') then
 		adc_cs <= '1';
-	elsif (a9) then
+	elsif (a9 = '1') then
 		oled_dc <= '1';
 	else
 		oled_cs <= '1';
