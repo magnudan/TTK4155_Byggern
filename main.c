@@ -9,6 +9,10 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+volatile char *ext_oledc = (char *) 0x1000;
+volatile char *ext_oledd = (char *) 0x1200;
+volatile char *ext_sram = (char *) 0x1800;
+
 int main(void){
     uart_init();
     SRAM_init();
@@ -16,6 +20,18 @@ int main(void){
     adc_init();
     button_init();
     while (1) {
+        *ext_oledc = 0xFF;
+        _delay_us(30);
+        *ext_oledc = 0x00;
+        _delay_us(30);
+        *ext_sram = 0xFF;
+        _delay_us(30);
+        *ext_oledd = 0xFF;
+        _delay_us(30);
+        *ext_oledd = 0x00;
+        _delay_us(30);
+
+        /*
         volatile char readout[] = " ";
         printf("X: ");
         printf("%d", adc_read_channel(JOYSTICK_X));
@@ -31,5 +47,6 @@ int main(void){
         printf("%d", button_read(BUTTON_R));
         printf("\n\r");
         _delay_ms(200);
+        */
     }
 }
