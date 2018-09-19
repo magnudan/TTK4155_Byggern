@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
-entity address_decoder is
+entity muxgroup is
 	Port (
 		-- in
 		a11 : In std_logic;
@@ -26,16 +26,12 @@ entity address_decoder is
 	attribute LOC of a10 	: signal is "P2";
 	attribute LOC of a9 	: signal is "P3";
 	attribute LOC of a8 	: signal is "P4";
-end address_decoder;
+end muxgroup;
 
-architecture behave of address_decoder is begin
-	if (a11 = '1') then
-		ram_cs <= '1';
-	elsif (a10 = '1') then
-		adc_cs <= '1';
-	elsif (a9 = '1') then
-		oled_dc <= '1';
-	else
-		oled_cs <= '1';
-	end if;
+architecture behave of muxgroup is begin
+	ram_cs <= not (a11);
+	adc_cs <= not(a10 and not a11);
+	oled_dc <= a9 and not a10 and not a11;
+	oled_cs <= not(not a10 and not a11); 
+	
 end behave;
