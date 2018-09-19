@@ -5,31 +5,24 @@
 #include "uart_driver.h"
 #include "adc.h"
 #include "button.h"
+#include "oled.h"
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
 
-volatile char *ext_oledc = (char *) 0x1000;
-volatile char *ext_oledd = (char *) 0x1200;
-volatile char *ext_sram = (char *) 0x1800;
 
 int main(void){
+
+    volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
+    volatile char *ext_oledd = (char *) OLEDD_START_ADDR;
+
     uart_init();
     SRAM_init();
     SRAM_test();
     adc_init();
     button_init();
+    oled_init();
     while (1) {
-        *ext_oledc = 0xFF;
-        _delay_us(30);
-        *ext_oledc = 0x00;
-        _delay_us(30);
-        *ext_sram = 0xFF;
-        _delay_us(30);
-        *ext_oledd = 0xFF;
-        _delay_us(30);
-        *ext_oledd = 0x00;
-        _delay_us(30);
 
         /*
         volatile char readout[] = " ";
@@ -47,6 +40,23 @@ int main(void){
         printf("%d", button_read(BUTTON_R));
         printf("\n\r");
         _delay_ms(200);
+        _delay_us(30);
         */
+
+        for (uint8_t i = 0; i < 8; i++) {
+            *ext_oledc = 0xB0 + i;
+            for(uint32_t i = 0; i<128; i++){
+                ext_oledd[i] = 0x00;
+            }
+        }
+        _delay_ms(100);
+        oled_goto_line(3);
+        oled_goto_column(0);
+        char test[] = "Hello world!";
+        oled_print_string(test);
+        oled_goto_column(0);
+        _delay_ms(2000);
     }
+
+
 }
