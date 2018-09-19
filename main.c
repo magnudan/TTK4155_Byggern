@@ -4,6 +4,7 @@
 #include "sram.h"
 #include "uart_driver.h"
 #include "adc.h"
+#include "button.h"
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -12,6 +13,8 @@ int main(void){
     uart_init();
     SRAM_init();
     SRAM_test();
+    adc_init();
+    button_init();
     while (1) {
         volatile char readout[] = " ";
         printf("X: ");
@@ -22,6 +25,10 @@ int main(void){
         printf("%d", adc_read_channel(SLIDER_L));
         printf("\tSlider R: ");
         printf("%d", adc_read_channel(SLIDER_R));
+        printf("\tButton L: ");
+        printf("%d", button_read(BUTTON_L));
+        printf("\tButton R: ");
+        printf("%d", button_read(BUTTON_R));
         printf("\n\r");
         _delay_ms(200);
     }

@@ -1,6 +1,14 @@
+#ifndef uart_driver_H_
+#define uart_driver_H_
+
+#include <stdio.h>
 
 void uart_init (void);
 
-void uart_transmit (unsigned char data);
+int uart_transmit (char data, FILE *f);
 
 unsigned char uart_recieve (void);
+
+extern FILE *uart;
+
+#endif
