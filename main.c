@@ -12,6 +12,47 @@
 #include "menu.h"
 
 
+void testFunction_1(){
+    volatile char readout[] = " ";
+    printf("X: ");
+    printf("%d", adc_read_channel(JOYSTICK_X));
+    printf("\tY: ");
+    printf("%d", adc_read_channel(JOYSTICK_Y));
+    printf("\tSlider L: ");
+    printf("%d", adc_read_channel(SLIDER_L));
+    printf("\tSlider R: ");
+    printf("%d", adc_read_channel(SLIDER_R));
+    printf("\tButton L: ");
+    printf("%d", button_read(BUTTON_L));
+    printf("\tButton R: ");
+    printf("%d", button_read(BUTTON_R));
+    printf("\n\r");
+    _delay_ms(200);
+    _delay_us(30);
+}
+
+void testFunction_2(){
+    //oled_clear_all();
+    _delay_ms(100);
+    oled_pos(0, 0);
+    char test[] = "Hello, laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaang tekst!";
+    //oled_print_string(test);
+    oled_print_string_SRAM(test);
+    //oled_print_string((char)(button_read(BUTTON_JOYSTICK)));
+    _delay_ms(500);
+    //oled_print_string_SRAM("DETTTE");
+    _delay_ms(1000);
+}
+
+void testFunction_3(){
+    oled_refresh_display();
+    _delay_ms(1000);
+    oled_write('X', 50,5);
+    _delay_ms(1000);
+    oled_refresh_display();
+    oled_write('O', 50,5);
+}
+
 int main(void){
 
     volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
@@ -23,40 +64,10 @@ int main(void){
     adc_init();
     button_init();
     oled_init();
+    oled_clear_all_SRAM();
     while (1) {
-
-        /*
-        volatile char readout[] = " ";
-        printf("X: ");
-        printf("%d", adc_read_channel(JOYSTICK_X));
-        printf("\tY: ");
-        printf("%d", adc_read_channel(JOYSTICK_Y));
-        printf("\tSlider L: ");
-        printf("%d", adc_read_channel(SLIDER_L));
-        printf("\tSlider R: ");
-        printf("%d", adc_read_channel(SLIDER_R));
-        printf("\tButton L: ");
-        printf("%d", button_read(BUTTON_L));
-        printf("\tButton R: ");
-        printf("%d", button_read(BUTTON_R));
-        printf("\n\r");
-        _delay_ms(200);
-        _delay_us(30);
-        */
-        oled_clear_all();
-        _delay_ms(100);
-        oled_goto_line(3);
-        oled_goto_column(0);
-        char test[] = "Hello world!";
-        oled_print_string(test);
-        oled_goto_column(0);
-        oled_goto_line(2);
-        oled_goto_column(0);
-        oled_print_string(test);
-        oled_goto_column(0);
-        _delay_ms(500);
-        printf("%d", button_read(BUTTON_JOYSTICK));
-
+        oled_refresh_display();
+        testFunction_2();
 
     }
 

@@ -26,3 +26,13 @@ void oled_print_char_negative(char c);
 void oled_print_string_negative(char cstring[]);
 
 void oled_clear_all();
+
+void oled_write(unsigned int data, int col, int row);
+
+void oled_refresh_display();
+
+void oled_clear_all_SRAM();
+
+void oled_print_string_SRAM(char cstring[]);
+
+void oled_print_char_SRAM(char c);

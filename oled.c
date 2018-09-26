@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "uart_driver.h"
 #include "fonts.h"
+#include "sram.h"
 
 volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
 volatile char *ext_oledd = (char *) OLEDD_START_ADDR;
@@ -10,8 +11,6 @@ volatile char *ext_oledd = (char *) OLEDD_START_ADDR;
 uint8_t page, col;
 
 void oled_init(){
-
-
 
     *ext_oledc = 0xAE; // display off
     *ext_oledc = 0xA1; // segment remap
@@ -39,7 +38,7 @@ void oled_init(){
 	*ext_oledc = 0xB0; // Set page start address, command B0-B7, B0: page 0, B1: page 1 ...
     *ext_oledc = 0x00; //Set lower column start address
     *ext_oledc = 0x10; //Set higher column start address*/
-
+    oled_clear_all();
     oled_home();
 }
 
@@ -101,12 +100,6 @@ void oled_print_char(char c){
     }
 }
 
-void oled_print_char_negative(char c){
-    for(int i = 0; i < 8; i++){
-        *ext_oledd =  pgm_read_byte(&font8[c][i]);
-        oled_goto_column(col + 1);
-    }
-}
 
 void oled_print_string(char cstring[]){
     int i = 0;
@@ -116,22 +109,73 @@ void oled_print_string(char cstring[]){
     }
 }
 
-void oled_print_string_negative(char cstring[]){
-    int i = 0;
-    while(cstring[i] != '\0'){
-        oled_print_char_negative(cstring[i] - ' ');
-        i++;
-    }
-}
 
 void oled_clear_all()
 {
     for (uint8_t i = 0; i < 8; i++)
     {
         *ext_oledc = 0xB0 + i;
-        for(uint32_t i = 0; i<128; i++)
+        for(uint32_t i = 0; i < 128; i++)
         {
             ext_oledd[i] = 0x00;
         }
     }
+}
+
+void oled_clear_all_SRAM()
+{
+    for (uint8_t row = 0; row < 8; row++)
+    {
+        //*ext_oledc = 0xB0 + line;
+        for(uint32_t column = 0; column<128; column++)
+        {
+            oled_write(0x00, column, row);
+        }
+    }
+}
+
+
+void oled_print_char_SRAM(char c){
+    if(col > 119){
+        oled_goto_line(page +1);
+    }
+    for(unsigned int bit = 0; bit < 8; bit++){
+        oled_write(pgm_read_byte(&font8[c][bit]), col, page);
+        oled_goto_column(col + 1);
+    }
+}
+
+void oled_print_string_SRAM(char cstring[]){
+    int i = 0;
+    while(cstring[i] != '\0'){
+        oled_print_char_SRAM(cstring[i] - ' ');
+        i++;
+    }
+}
+
+void oled_write_line(char cstring[], unsigned int row){
+    oled_goto_line(row);
+    oled_print_string_SRAM(cstring);
+    oled_goto_line(row + 1);
+}
+
+
+void oled_write(unsigned int data, int column, int row){
+    unsigned int SRAM_adress = column + (row * 128) + 1024;
+    SRAM_write(SRAM_adress, data);
+}
+
+void oled_refresh_display(){
+    oled_home();
+    for(unsigned int adress = 1024; adress < 2047; adress++){
+        *ext_oledd = SRAM_read(adress);
+        if(col + 1 > 127){
+            oled_goto_line(page + 1);
+        }
+        else{
+            oled_goto_column(col + 1);
+        }
+    }
+    *ext_oledd = SRAM_read(2047);
+    oled_home();
 }
