@@ -6,10 +6,12 @@
 #include "adc.h"
 #include "button.h"
 #include "oled.h"
+#include "menu.h"
+
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
-#include "menu.h"
+#include <avr/interrupt.h>
 
 
 void testFunction_1(){
@@ -53,6 +55,17 @@ void testFunction_3(){
     oled_write('O', 50,5);
 }
 
+void timer_interupt_init()
+{
+    TCCR0 = 0x00;
+    TCCR0 = (1<<CS02) | (1<<CS00); //set timer prescaler to 1024
+    TIMSK = (1<<TOIE0); //enable timer0 overflow interrupt
+    //OCR0 = 80;
+    sei();
+}
+
+
+
 int main(void){
 
     volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
@@ -64,12 +77,13 @@ int main(void){
     adc_init();
     button_init();
     oled_init();
+    timer_interupt_init();
     oled_clear_all_SRAM();
-    while (1) {
-        oled_refresh_display();
-        testFunction_2();
+    init_menu();
+    menu_loop();
+}
 
-    }
-
-
+ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed intervals
+{
+    //oled_refresh_display();
 }

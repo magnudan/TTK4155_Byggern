@@ -36,3 +36,5 @@ void oled_clear_all_SRAM();
 void oled_print_string_SRAM(char cstring[]);
 
 void oled_print_char_SRAM(char c);
+
+void oled_write_line(char cstring[]);

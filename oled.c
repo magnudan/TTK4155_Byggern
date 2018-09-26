@@ -153,10 +153,9 @@ void oled_print_string_SRAM(char cstring[]){
     }
 }
 
-void oled_write_line(char cstring[], unsigned int row){
-    oled_goto_line(row);
+void oled_write_line(char cstring[]){
     oled_print_string_SRAM(cstring);
-    oled_goto_line(row + 1);
+    oled_goto_line(page + 1);
 }
 
 
