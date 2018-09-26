@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
+#include "menu.h"
 
 
 int main(void){
@@ -42,20 +43,21 @@ int main(void){
         _delay_ms(200);
         _delay_us(30);
         */
-
-        for (uint8_t i = 0; i < 8; i++) {
-            *ext_oledc = 0xB0 + i;
-            for(uint32_t i = 0; i<128; i++){
-                ext_oledd[i] = 0x00;
-            }
-        }
+        oled_clear_all();
         _delay_ms(100);
         oled_goto_line(3);
         oled_goto_column(0);
         char test[] = "Hello world!";
         oled_print_string(test);
         oled_goto_column(0);
-        _delay_ms(2000);
+        oled_goto_line(2);
+        oled_goto_column(0);
+        oled_print_string(test);
+        oled_goto_column(0);
+        _delay_ms(500);
+        printf("%d", button_read(BUTTON_JOYSTICK));
+
+
     }
 
 

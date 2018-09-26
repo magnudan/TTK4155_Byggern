@@ -19,3 +19,10 @@ void oled_pos(uint8_t row, uint8_t column);
 void oled_print_char(char c);
 
 void oled_print_string(char cstring[]);
+
+
+void oled_print_char_negative(char c);
+
+void oled_print_string_negative(char cstring[]);
+
+void oled_clear_all();

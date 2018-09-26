@@ -101,10 +101,37 @@ void oled_print_char(char c){
     }
 }
 
+void oled_print_char_negative(char c){
+    for(int i = 0; i < 8; i++){
+        *ext_oledd =  pgm_read_byte(&font8[c][i]);
+        oled_goto_column(col + 1);
+    }
+}
+
 void oled_print_string(char cstring[]){
     int i = 0;
     while(cstring[i] != '\0'){
         oled_print_char(cstring[i] - ' ');
         i++;
+    }
+}
+
+void oled_print_string_negative(char cstring[]){
+    int i = 0;
+    while(cstring[i] != '\0'){
+        oled_print_char_negative(cstring[i] - ' ');
+        i++;
+    }
+}
+
+void oled_clear_all()
+{
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        *ext_oledc = 0xB0 + i;
+        for(uint32_t i = 0; i<128; i++)
+        {
+            ext_oledd[i] = 0x00;
+        }
     }
 }
