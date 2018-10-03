@@ -185,16 +185,16 @@ void oled_draw_line(int x0, int y0, int x1, int y1){
   }
   else{
     oled_pos(x0, y0);
-    if(x1-xo >= y1-y0){
-      for(int i = x0; i++ i <){
-          oled_write(0xFF, x0, ()(y1-y0)/(x1-x0))*i+y0);
+    if(x1-x0 >= y1-y0){
+      for(int i = x0; i++; i < x1){
+        printf("Test");
+          oled_write(0xFF, i,((y1-y0)/(x1-x0))*i+y0);
       }
     }
     else{
-
+      for(int i = y0; i++; i < y1){
+        oled_write(0xFF, ((x1-x0)/(y1-y0))*i+x0,i);
+      }
     }
-
-
   }
-
 }

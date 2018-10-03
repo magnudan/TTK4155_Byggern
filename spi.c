@@ -23,18 +23,17 @@ void SPI_init(void) {
 	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
 }
 
-void SPI_send(char data) {
+void SPI_transmit_byte(uint8_t data_byte) {
 	//Start the transmission
-	SPDR = data;
+	SPDR = data_byte;
 
 	//Wait for data to be transmitted (checks if the register is empty)
 	while(!(SPSR & (1<<SPIF)));
 }
 
-uint8_t SPI_read(void) {
+uint8_t SPI_recieve_byte(void) {
 	//Send dummy data to read from slave
-	SPI_send(0);
-
+	SPI_transmit_byte(0);
 	//Wait for data to be received
 	while(!(SPSR & (1<<SPIF)));
 
@@ -57,7 +56,7 @@ void SPI_test_loop(void){
 	while(1){
 		i++;
 		SPI_select();
-		SPI_send(0x50);
+		SPI_transmit_byte(0x50);
 		SPI_deselect();
 		_delay_ms(1);
 	}

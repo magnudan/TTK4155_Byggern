@@ -8,6 +8,8 @@
 #include "oled.h"
 #include "menu.h"
 #include "spi.h"
+#include "MCP2515.h"
+#include "can.h"
 
 #include <stdio.h>
 #include <avr/io.h>
@@ -82,8 +84,20 @@ int main(void){
     //timer_interupt_init();
     oled_clear_all_SRAM();
     init_menu();
-    printf("henlo");
-    SPI_test_loop();
+    SPI_init();
+    MCP_init();
+    CAN_init();
+    //SPI_test_loop();
+    /*uint64_t data = 0xFF00FF00FF00FF00;
+    MCP_send_single_data_byte(MCP_TXB0CTRL, 3);
+    MCP_load_TX_buffer(data);*/
+    Can_block my_can_block = {3, 8, {0xFF, 0xAA, 0xFF, 0xAA, 0xFF, 0xDD, 0xCC, 0xBB}};
+    while(1){
+      CAN_send(&my_can_block);
+      //MCP_request_send();
+      printf("%016x\n\r", MCP_read_single_data_byte(0x66));
+      _delay_ms(200);
+    }
 }
 
 ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed intervals
