@@ -108,8 +108,7 @@ void menu_loop()
 			move_pointer_in_menu(RIGHT);
 		}
 		*/
-
 		oled_refresh_display();
-		_delay_ms(50);
+		_delay_ms(200);
 	}
 }

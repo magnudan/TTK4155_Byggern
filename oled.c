@@ -178,3 +178,23 @@ void oled_refresh_display(){
     *ext_oledd = SRAM_read(2047);
     oled_home();
 }
+
+void oled_draw_line(int x0, int y0, int x1, int y1){
+  if ((x0 < 0) || y0 < 0 || x1 > 127 || y1 > 7){
+    printf("Error: line out of display\n\r");
+  }
+  else{
+    oled_pos(x0, y0);
+    if(x1-xo >= y1-y0){
+      for(int i = x0; i++ i <){
+          oled_write(0xFF, x0, ()(y1-y0)/(x1-x0))*i+y0);
+      }
+    }
+    else{
+
+    }
+
+
+  }
+
+}

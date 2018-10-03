@@ -7,6 +7,7 @@
 #include "button.h"
 #include "oled.h"
 #include "menu.h"
+#include "spi.h"
 
 #include <stdio.h>
 #include <avr/io.h>
@@ -71,16 +72,18 @@ int main(void){
     volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
     volatile char *ext_oledd = (char *) OLEDD_START_ADDR;
 
+
     uart_init();
     SRAM_init();
     SRAM_test();
     adc_init();
     button_init();
     oled_init();
-    timer_interupt_init();
+    //timer_interupt_init();
     oled_clear_all_SRAM();
     init_menu();
-    menu_loop();
+    printf("henlo");
+    SPI_test_loop();
 }
 
 ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed intervals
