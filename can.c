@@ -3,12 +3,13 @@
 #include <stdio.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "node_setup.h"
 
 
 void CAN_init(void){
 
     MCP_bit_modify(MCP_RXB0CTRL, 0b01100000, 0xFF);
-    MCP_send_single_data_byte(MCP_CANCTRL, MODE_LOOPBACK);
+    MCP_send_single_data_byte(MCP_CANCTRL, MODE_NORMAL);
 
     CAN_message_interrupt_init();
 
@@ -30,6 +31,7 @@ void CAN_send(Can_block* can_block){
 
 Can_block CAN_recieve(uint8_t buffer){
     Can_block received_can_block;
+
 
     received_can_block.id = (MCP_read_single_data_byte(MCP_SID0_HIGH) << 3) | (MCP_read_single_data_byte(MCP_SID0_LOW) >> 5);
 

@@ -1,6 +1,6 @@
 // POLLING EXAMPLE(ATmega162)
 // 8 buttons connected to PORTA, 8 leds to PORTB
-#include "cpu_info.h"
+#include "node_setup.h"
 #include "sram.h"
 #include "uart_driver.h"
 #include "adc.h"
@@ -93,7 +93,7 @@ int main(void){
     /*uint64_t data = 0xFF00FF00FF00FF00;
     MCP_send_single_data_byte(MCP_TXB0CTRL, 3);
     MCP_load_TX_buffer(data);*/
-    Can_block my_can_block = {100, 6, { 0xFF, 0xFF,0xAA, 0xFF, 0xFF, 0xFF,0xFF, 0xFF}};
+    Can_block my_can_block = {1, 6, { 0xFF, 0xFF,0xAA, 0xFF, 0xFF, 0xFF,0xFF, 0xFF}};
     while(1){
       CAN_send(&my_can_block);
       printf("%d\n", MCP_read_single_data_byte(0x2C));

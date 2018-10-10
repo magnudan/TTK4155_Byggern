@@ -1,5 +1,5 @@
 #include "uart_driver.h"
-#include "cpu_info.h"
+#include "node_setup.h"
 #include <avr/io.h>
 #include <stdint.h>
 
