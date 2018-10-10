@@ -91,12 +91,16 @@ int main(void){
     /*uint64_t data = 0xFF00FF00FF00FF00;
     MCP_send_single_data_byte(MCP_TXB0CTRL, 3);
     MCP_load_TX_buffer(data);*/
-    Can_block my_can_block = {3, 8, {0xFF, 0xAA, 0xFF, 0xAA, 0xFF, 0xDD, 0xCC, 0xBB}};
+    Can_block my_can_block = {100, 6, { 0xFF, 0xFF,0xAA, 0xFF, 0xFF, 0xFF,0xFF, 0xFF}};
     while(1){
       CAN_send(&my_can_block);
-      //MCP_request_send();
-      printf("%016x\n\r", MCP_read_single_data_byte(0x66));
-      _delay_ms(200);
+      _delay_ms(300);
+      Can_block my_other_can_block = CAN_recieve(52);
+      for(int i = 0; i < my_other_can_block.length; i++){
+          printf("(%d)\r\n", my_other_can_block.data[i]);
+      }
+      printf("\n\n\n\n\n\n");
+      _delay_ms(300);
     }
 }
 

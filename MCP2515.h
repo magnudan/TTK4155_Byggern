@@ -165,7 +165,7 @@ void MCP_reset(void);
 uint8_t MCP_read_single_data_byte(uint8_t address);
 void MCP_send_single_data_byte(uint8_t address, uint8_t command);
 
-uint64_t MCP_read_RX_buffer(void);
+void MCP_read_RX_buffer(uint8_t data[], uint8_t length);
 void MCP_load_TX_buffer(uint64_t data);
 
 void MCP_request_send(void);

@@ -5,7 +5,7 @@
 
 void MCP_init(){
     MCP_reset();
-    MCP_send_single_data_byte(MCP_CANCTRL, MODE_LOOPBACK);
+    //MCP_send_single_data_byte(MCP_CANCTRL, MODE_LOOPBACK);
 }
 
 void MCP_reset(){
@@ -45,17 +45,15 @@ uint64_t MCP_read_RX_buffer_test(void){
 
 
 
-uint64_t MCP_read_RX_buffer(void){
-    uint64_t buffer_data = 0;
-    volatile uint8_t recieved_byte = 0;
+void MCP_read_RX_buffer(uint8_t data[], uint8_t length){
     SPI_select();
     SPI_transmit_byte(MCP_READ_RX0);
-    for(int i = 0; i<8; i++){
-        recieved_byte = SPI_recieve_byte();
-        buffer_data |= (recieved_byte << (8*i));
+    for(int i = 0; i < length; i++){
+        data[i] = SPI_recieve_byte();
+        //buffer_data |= (recieved_byte << (8*i));
     }
     SPI_deselect();
-    return buffer_data;
+    //return buffer_data;
 }
 
 
