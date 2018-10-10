@@ -18,8 +18,10 @@ typedef struct {
 
 void CAN_init(void);
 
-void CAN_send(Can_block* can_block);
+int CAN_send(Can_block* can_block);
 
 Can_block CAN_recieve(uint8_t buffer);
 
 void CAN_reset_interrupt_flag();
+
+int CAN_clear_to_send();
