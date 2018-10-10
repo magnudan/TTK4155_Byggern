@@ -69,6 +69,8 @@ void timer_interupt_init()
 
 
 
+
+
 int main(void){
 
     volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
@@ -94,12 +96,15 @@ int main(void){
     Can_block my_can_block = {100, 6, { 0xFF, 0xFF,0xAA, 0xFF, 0xFF, 0xFF,0xFF, 0xFF}};
     while(1){
       CAN_send(&my_can_block);
+      printf("%d\n", MCP_read_single_data_byte(0x2C));
       _delay_ms(300);
-      Can_block my_other_can_block = CAN_recieve(52);
+      printf("%d\n", MCP_read_single_data_byte(0x2C));
+      Can_block my_other_can_block = CAN_recieve(1);
       for(int i = 0; i < my_other_can_block.length; i++){
-          printf("(%d)\r\n", my_other_can_block.data[i]);
+          //printf("(%d)\r\n", my_other_can_block.data[i]);
       }
       printf("\n\n\n\n\n\n");
+      printf("%d\n", MCP_read_single_data_byte(0x2C));
       _delay_ms(300);
     }
 }
@@ -107,4 +112,8 @@ int main(void){
 ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed intervals
 {
     //oled_refresh_display();
+}
+
+ISR(INT0_vect){
+    printf("HEI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
 }

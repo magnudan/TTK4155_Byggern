@@ -1,11 +1,17 @@
 #include "can.h"
 #include "MCP2515.h"
 #include <stdio.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
 
 void CAN_init(void){
 
     MCP_bit_modify(MCP_RXB0CTRL, 0b01100000, 0xFF);
     MCP_send_single_data_byte(MCP_CANCTRL, MODE_LOOPBACK);
+
+    CAN_message_interrupt_init();
+
 
 }
 
@@ -30,9 +36,20 @@ Can_block CAN_recieve(uint8_t buffer){
     received_can_block.length = MCP_read_single_data_byte(MCP_RXB0DLC) & (0x0F);
 
     for(uint8_t i = 0; i < received_can_block.length; i++){
-
         received_can_block.data[i] = MCP_read_single_data_byte(MCP_RXB + i);
-
     }
+    CAN_reset_interrupt_flag();
+    printf("%d\n", MCP_read_single_data_byte(0x2C));
+
     return received_can_block;
+}
+
+void CAN_reset_interrupt_flag(){
+    MCP_bit_modify(MCP_CANINTF, 0x01, 0x00);
+}
+
+void CAN_message_interrupt_init(){
+    MCP_bit_modify(MCP_CANINTE, 0x01, 0xFF); //Interupt enable
+    MCUCR = (1 << ISC01) | (1 << ISC00);
+    sei();
 }
