@@ -40,12 +40,13 @@ void testFunction_2(){
     //oled_clear_all();
     _delay_ms(100);
     oled_pos(0, 0);
-    char test[] = "Hello, laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaang tekst!";
+    char test[] = "Hello, laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaang tekst!\0";
     //oled_print_string(test);
     oled_print_string_SRAM(test);
     //oled_print_string((char)(button_read(BUTTON_JOYSTICK)));
     _delay_ms(500);
     //oled_print_string_SRAM("DETTTE");
+    oled_refresh_display();
     _delay_ms(1000);
 }
 
@@ -95,6 +96,7 @@ int main(void){
     MCP_load_TX_buffer(data);*/
     Can_block my_can_block = {1, 6, { 0xFF, 0xFF,0xAA, 0xFF, 0xFF, 0xFF,0xFF, 0xFF}};
     while(1){
+        /*
       CAN_send(&my_can_block);
       printf("%d\n", MCP_read_single_data_byte(0x2C));
       _delay_ms(300);
@@ -106,6 +108,8 @@ int main(void){
       printf("\n\n\n\n\n\n");
       printf("%d\n", MCP_read_single_data_byte(0x2C));
       _delay_ms(300);
+      */
+      testFunction_2();
     }
 }
 

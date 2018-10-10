@@ -20,6 +20,7 @@ int SRAM_write(unsigned int address, unsigned int data){
 
 	//write data to given address
 	ext_ram[address] = data;
+	printf("DOOT!\r\n");
 	return 0;
 }
 
