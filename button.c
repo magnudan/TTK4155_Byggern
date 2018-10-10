@@ -1,5 +1,5 @@
 #include "button.h"
-#include "cpu_info.h"
+#include "node_setup.h"
 #include <avr/io.h>
 
 void button_init(void){

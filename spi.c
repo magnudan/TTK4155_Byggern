@@ -1,5 +1,5 @@
 #include <avr/io.h>
-#include "cpu_info.h"
+#include "node_setup.h"
 #include <util/delay.h>
 #include "spi.h"
 
