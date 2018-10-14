@@ -176,7 +176,6 @@ void oled_refresh_display(){
         }
     }
     *ext_oledd = SRAM_read(2047);
-    printf("\tDOOT!\r\n");
     oled_home();
 }
 
