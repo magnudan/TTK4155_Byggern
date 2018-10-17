@@ -1,7 +1,5 @@
-#ifndef F_CPU 
-#define F_CPU 16000000UL
-#endif
 
+#include "node_setup.h"
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -12,15 +10,7 @@
 void PWM_init();
 void PWM_set_angle(uint8_t angle);
 
-int main(void){
-    PWM_init();
-    while(1){
-        _delay_ms(1000); 
-        PWM_set_angle(255);
-        _delay_ms(1000);
-        PWM_set_angle(0);
-    }
-}
+
 //opens pwm on PB5
 void PWM_init(){
     //set data direction for pin 5 to output
