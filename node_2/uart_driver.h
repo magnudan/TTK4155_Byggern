@@ -5,9 +5,9 @@
 
 void uart_init (void);
 
-int uart_transmit (char data, FILE *f);
+int uart_transmit ( char data, FILE* f);
 
-unsigned char uart_recieve (void);
+int uart_recieve (FILE* f);
 
 extern FILE *uart;
 
