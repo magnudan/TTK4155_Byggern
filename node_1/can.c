@@ -8,8 +8,8 @@
 
 void CAN_init(void){
 
-    MCP_bit_modify(MCP_RXB0CTRL, 0b01100000, 0xFF);
-    MCP_send_single_data_byte(MCP_CANCTRL, MODE_NORMAL);
+    MCP_bit_modify(MCP_RXB0CTRL, MCP_RX_BUFF_OP_MODE_BITS, 0x00);
+    MCP_send_single_data_byte(MCP_CANCTRL, MODE_LOOPBACK);
 
     CAN_message_interrupt_init();
 
@@ -17,11 +17,12 @@ void CAN_init(void){
 }
 
 int CAN_send(Can_block* can_block){
-    //MCP_bit_modify(MCP_TXB0CTRL, 0b00000111, 0x07);
+    MCP_bit_modify(MCP_TXB0CTRL, MCP_TX_PRI_BITS, 0x03);
+
     if(CAN_clear_to_send()){
         MCP_send_single_data_byte(MCP_SID0_HIGH, can_block -> id >> 3);
         MCP_send_single_data_byte(MCP_SID0_LOW, can_block -> id << 5);
-        MCP_send_single_data_byte(MCP_RXB0DLC, (can_block -> length) & (0x0F) ); //Set data length
+        MCP_send_single_data_byte(MCP_TXB0DLC, (can_block -> length) & (0x0F) ); //Set data length
 
         for(int i = 0; i < can_block -> length ; i++){
             MCP_send_single_data_byte(MCP_TXB + i, can_block -> data[i]);
@@ -42,28 +43,27 @@ Can_block CAN_recieve(uint8_t buffer){
 
 
     received_can_block.id = (MCP_read_single_data_byte(MCP_SID0_HIGH) << 3) | (MCP_read_single_data_byte(MCP_SID0_LOW) >> 5);
+    received_can_block.length = (MCP_read_single_data_byte(MCP_RXB0DLC)) & (MCP_DATA_LENGTH_BITS);
 
-    received_can_block.length = MCP_read_single_data_byte(MCP_RXB0DLC) & (0x0F);
 
     for(uint8_t i = 0; i < received_can_block.length; i++){
         received_can_block.data[i] = MCP_read_single_data_byte(MCP_RXB + i);
     }
     CAN_reset_interrupt_flag();
-    printf("%d\n", MCP_read_single_data_byte(0x2C));
 
     return received_can_block;
 }
 
 int CAN_clear_to_send(){
     // If bit 3 in control register TXB0 is 0, the buffer is ready to send
-    return !(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), 0x03));
+    return !(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), MCP_MSG_TX_REQ_BIT));
 }
 
 int CAN_error(){
-    if(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), 0x04)){
+    if(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), MCP_TX_ERR_DETECTED_BIT)){
         return -1; //Error in TXREQ, transmitting error.
     }
-    if(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), 0x05)){
+    if(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), MCP_MSG_LOST_ARB_BIT)){
         return -2; // MLOA: message lost in arbritition.
     }
     return 0;
@@ -71,11 +71,15 @@ int CAN_error(){
 
 
 void CAN_reset_interrupt_flag(){
-    MCP_bit_modify(MCP_CANINTF, 0x01, 0x00);
+    MCP_bit_modify(MCP_CANINTF, MCP_RX_BUFF0_FULL_FLAG, 0x00);
 }
 
 void CAN_message_interrupt_init(){
-    MCP_bit_modify(MCP_CANINTE, 0x01, 0xFF); //Interupt enable
-    MCUCR = (1 << ISC01) | (1 << ISC00);
+    MCP_bit_modify(MCP_CANINTE, MCP_RX_BUFF0_FULL_ENABLE, 0xFF);   //Interupt enable
+    GICR = (1 << INT0);
+    MCUCR = (1 << ISC01) | (0 << ISC00);
+    //DDRD = (1 << PD2);
+    PORTD = (1 << PD2);
+
     sei();
 }
