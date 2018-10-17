@@ -76,10 +76,10 @@ void CAN_reset_interrupt_flag(){
 
 void CAN_message_interrupt_init(){
     MCP_bit_modify(MCP_CANINTE, MCP_RX_BUFF0_FULL_ENABLE, 0xFF);   //Interupt enable
-    GICR = (1 << INT0);
+    EIMSK = (1 << INT0);
     MCUCR = (1 << ISC01) | (0 << ISC00);
     //DDRD = (1 << PD2);
-    PORTD = (1 << PD2);
+    PORTD = (1 << PD0);
 
     sei();
 }

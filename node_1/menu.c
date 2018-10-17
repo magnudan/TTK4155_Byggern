@@ -4,6 +4,7 @@
 #include "oled.h"
 #include "button.h"
 #include "adc.h"
+
 typedef struct Node Node;
 
 struct Node{

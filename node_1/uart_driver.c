@@ -1,10 +1,14 @@
 #include "uart_driver.h"
-#include "node_setup.h"
+
+#include <stdio.h>
 #include <avr/io.h>
 #include <stdint.h>
+#include "node_setup.h"
+
 
 #define BAUD 9600
 #define BAUDRATE ( (F_CPU) / (BAUD * 16UL) - 1 )
+
 FILE *uart;
 
 void uart_init(){

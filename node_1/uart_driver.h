@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#endif
+
 void uart_init (void);
 
 int uart_transmit (char data, FILE *f);
@@ -10,5 +12,3 @@ int uart_transmit (char data, FILE *f);
 unsigned char uart_recieve (void);
 
 extern FILE *uart;
-
-#endif

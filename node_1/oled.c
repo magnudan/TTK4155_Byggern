@@ -1,9 +1,11 @@
 #include "oled.h"
+
 #include <avr/io.h>
 #include <stdio.h>
 #include "uart_driver.h"
 #include "fonts.h"
 #include "sram.h"
+
 
 volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
 volatile char *ext_oledd = (char *) OLEDD_START_ADDR;

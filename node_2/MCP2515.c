@@ -1,5 +1,4 @@
 #include "spi.h"
-
 #include <stdio.h>
 #include <util/delay.h>
 #include "MCP2515.h"

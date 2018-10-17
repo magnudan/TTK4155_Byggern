@@ -1,17 +1,16 @@
-#include "spi.h"
-
 #include <avr/io.h>
-#include <util/delay.h>
 #include "node_setup.h"
+#include <util/delay.h>
+#include "spi.h"
 
 //Define SPI pins
 
 #define SPI_PORT_DDR DDRB
-#define SPI_PORT     PORTB
-#define SPI_SS   PB4
-#define SPI_MOSI PB5
-#define SPI_MISO PB6
-#define SPI_SCK  PB7
+#define SPI_PORT PORTB
+#define SPI_SS PB0
+#define SPI_MOSI PB2
+#define SPI_MISO PB3
+#define SPI_SCK PB1
 
 void SPI_init(void) {
 	//Set MOSI, SCK and SS as output pins
@@ -22,6 +21,7 @@ void SPI_init(void) {
 
 	//Enable SPI in master mode and set clock rate fosc/16
 	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
+		//| (1 << SPR1)
 }
 
 void SPI_transmit_byte(uint8_t data_byte) {

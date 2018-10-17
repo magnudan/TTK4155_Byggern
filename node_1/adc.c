@@ -11,7 +11,7 @@ void adc_init(void){
 }
 
 int adc_read_channel(unsigned int channel){
-    ext_adc[0] = (uint8_t)(channel+3);
+    ext_adc[0] = (uint8_t)(channel);
     //_delay_us(1);
     //while (PINB & (1<<PB2)) {
     //    _delay_us(1);

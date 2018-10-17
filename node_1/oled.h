@@ -1,8 +1,13 @@
-#include <avr/io.h>
+#ifndef oled_H_
+#define oled_H_
 
+#include <avr/io.h>
 
 #define OLEDC_START_ADDR 0x1000
 #define OLEDD_START_ADDR 0x1200
+
+#endif
+
 
 void oled_init(void);
 

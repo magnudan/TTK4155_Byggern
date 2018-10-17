@@ -17,7 +17,7 @@
 #include <avr/interrupt.h>
 
 
-void testFunction_1(){
+void print_multifunction_card(){
     volatile char readout[] = " ";
     printf("X: ");
     printf("%d", adc_read_channel(JOYSTICK_X));
@@ -31,6 +31,8 @@ void testFunction_1(){
     printf("%d", button_read(BUTTON_L));
     printf("\tButton R: ");
     printf("%d", button_read(BUTTON_R));
+    printf("\tButton Joystick: ");
+    printf("%d", button_read(BUTTON_JOYSTICK));
     printf("\n\r");
     _delay_ms(200);
     _delay_us(30);
@@ -96,27 +98,26 @@ int main(void){
     MCP_load_TX_buffer(data);*/
     Can_block my_can_block = {1, 3, { 0xFF, 0xAA, 0x00}};
     CAN_reset_interrupt_flag();
-    printf("%d\n", MCP_read_single_data_byte(MCP_CANINTF));
     while(1){
-      //printf("%d\n", CAN_send(&my_can_block));
-      //CAN_reset_interrupt_flag();
-      //CAN_reset_interrupt_flag();
+          //printf("%d\n", CAN_send(&my_can_block));
+          //CAN_reset_interrupt_flag();
+          //CAN_reset_interrupt_flag();
 
-      CAN_send(&my_can_block);
-      //CAN_reset_interrupt_flag();
+          CAN_send(&my_can_block);
 
-      //printf("%d\n", MCP_read_single_data_byte(MCP_CANINTF));
-      //printf("%d\n", MCP_read_single_data_byte(0x2C));
-      /*_delay_ms(300);
-      //printf("%d\n", MCP_read_single_data_byte(0x2C));
-      Can_block my_other_can_block = CAN_recieve(1);
-      //printf("%0x16d\r\n", my_other_can_block.length);
-      for(int i = 0; i < my_other_can_block.length; i++){
-          //printf("(%d)\r\n", my_other_can_block.data[i]);
-      }*/
-      //printf("test");
+          //CAN_reset_interrupt_flag();
 
-      //CAN_reset_interrupt_flag();
+          //printf("%d\n", MCP_read_single_data_byte(MCP_CANINTF));
+          //printf("%d\n", MCP_read_single_data_byte(0x2C));
+          /*_delay_ms(300);
+          //printf("%d\n", MCP_read_single_data_byte(0x2C));
+          Can_block my_other_can_block = CAN_recieve(1);
+          //printf("%0x16d\r\n", my_other_can_block.length);
+          for(int i = 0; i < my_other_can_block.length; i++){
+              //printf("(%d)\r\n", my_other_can_block.data[i]);
+          }*/
+          //printf("test");
+
     }
 }
 
@@ -128,7 +129,6 @@ ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed inte
 */
 
 ISR(INT0_vect){
-    printf("Test\r\n");
     Can_block my_other_can_block = CAN_recieve(1);
     //printf("%0x16d\r\n", my_other_can_block.length);
     for(int i = 0; i < my_other_can_block.length; i++){

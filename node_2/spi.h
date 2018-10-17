@@ -1,9 +1,5 @@
-#ifndef spi_H_
-#define spi_H_
-
 #include <avr/io.h>
 
-#endif
 
 void SPI_init();
 
