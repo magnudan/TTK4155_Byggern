@@ -1,5 +1,5 @@
-#include "uart_driver.h"
 #include "node_setup.h"
+#include "uart_driver.h"
 #include <avr/io.h>
 #include <stdint.h>
 
@@ -11,7 +11,7 @@ void uart_init(){
     UBRR0H = (BAUDRATE >> 8);       // set high register of the baud rate register UBRR0
     UBRR0L = BAUDRATE;              // set low register of the baud rate register UBRR0
     UCSR0B |= (1 << TXEN0) | (1 << RXEN0);      //enable transmit and recieve
-    UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01) | (1<<USBS0); // Trasmit size 8 bit - 2 stop bits
+    UCSR0C |= (3 << UCSZ00) | (1<<USBS0); // Trasmit size 8 bit - 2 stop bits
 
     uart = fdevopen(&uart_transmit, &uart_recieve);
 }
@@ -22,7 +22,7 @@ int uart_transmit(char data, FILE *f){
     return 0;                      //fill UDR0 with data
 }
 
-unsigned char uart_recieve(void){
+int uart_recieve(FILE *f){
     while(!(UCSR0A) & (1 << RXC0));         //wait for empty data register UDR0
     return UDR0;                            //fetch UDR0 data
 }
