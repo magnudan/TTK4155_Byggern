@@ -1,3 +1,6 @@
+#ifndef node_setup_H_
+#define node_setup_H_
+
 #define F_CPU 1000000UL
 
 
