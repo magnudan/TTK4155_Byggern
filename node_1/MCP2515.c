@@ -84,7 +84,8 @@ uint8_t MCP_read_status(void){
 
 void MCP_bit_modify(uint8_t register_to_modify, uint8_t mask, uint8_t data){
     SPI_select();
-    SPI_transmit_byte(MCP_bit_modify);
+    SPI_transmit_byte(MCP_BITMOD);
+    SPI_transmit_byte(register_to_modify);
     SPI_transmit_byte(mask);
     SPI_transmit_byte(data);
     SPI_deselect();

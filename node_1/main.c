@@ -95,18 +95,28 @@ int main(void){
     MCP_send_single_data_byte(MCP_TXB0CTRL, 3);
     MCP_load_TX_buffer(data);*/
     Can_block my_can_block = {1, 3, { 0xFF, 0xAA, 0x00}};
+    CAN_reset_interrupt_flag();
+    printf("%d\n", MCP_read_single_data_byte(MCP_CANINTF));
     while(1){
       //printf("%d\n", CAN_send(&my_can_block));
+      //CAN_reset_interrupt_flag();
+      //CAN_reset_interrupt_flag();
+
       CAN_send(&my_can_block);
+      //CAN_reset_interrupt_flag();
+
+      //printf("%d\n", MCP_read_single_data_byte(MCP_CANINTF));
       //printf("%d\n", MCP_read_single_data_byte(0x2C));
-      _delay_ms(300);
+      /*_delay_ms(300);
       //printf("%d\n", MCP_read_single_data_byte(0x2C));
       Can_block my_other_can_block = CAN_recieve(1);
       //printf("%0x16d\r\n", my_other_can_block.length);
       for(int i = 0; i < my_other_can_block.length; i++){
-          printf("(%d)\r\n", my_other_can_block.data[i]);
-      }
+          //printf("(%d)\r\n", my_other_can_block.data[i]);
+      }*/
+      //printf("test");
 
+      //CAN_reset_interrupt_flag();
     }
 }
 
@@ -115,8 +125,13 @@ ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed inte
 {
     //oled_refresh_display();
 }
+*/
 
 ISR(INT0_vect){
-    printf("HEI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\r\n");
+    printf("Test\r\n");
+    Can_block my_other_can_block = CAN_recieve(1);
+    //printf("%0x16d\r\n", my_other_can_block.length);
+    for(int i = 0; i < my_other_can_block.length; i++){
+        printf("(%d)\r\n", my_other_can_block.data[i]);
+    }
 }
-*/
