@@ -1,7 +1,7 @@
-#define SRAM_START_ADDR 0x1800
-
+#include "sram.h"
 #include <avr/io.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int SRAM_init(void){
 
@@ -34,7 +34,6 @@ unsigned int SRAM_read(unsigned int address) {
 }
 
 
-#include <stdlib.h>
 void SRAM_test(void){
 	volatile char *ext_ram = (char *) 0x1800; // Start address for the SRAM
 	uint16_t ext_ram_size = 0x800;

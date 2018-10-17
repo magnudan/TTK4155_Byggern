@@ -4,6 +4,8 @@
 #define MCP_SID0_LOW MCP_TXB0CTRL + 2
 #define MCP_RXB0DLC 0x65
 #define MCP_RXB1DLC 0x75
+#define MCP_TXB0DLC 0x35
+#define MCP_TXB1DLC 0x45
 #define MCP_RXB 0x66
 #define MCP_TXB 0x36
 
