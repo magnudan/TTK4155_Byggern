@@ -38,3 +38,7 @@ Can_block CAN_recieve(uint8_t buffer);
 void CAN_reset_interrupt_flag();
 
 int CAN_clear_to_send();
+
+int CAN_error();
+
+void CAN_message_interrupt_init();

@@ -7,14 +7,15 @@
 
 #define SPI_PORT_DDR DDRB
 #define SPI_PORT PORTB
-#define SPI_SS PB0
+#define SPI_SS PB7
 #define SPI_MOSI PB2
 #define SPI_MISO PB3
 #define SPI_SCK PB1
+#define IO_BOARD_SS PB0
 
 void SPI_init(void) {
 	//Set MOSI, SCK and SS as output pins
-	SPI_PORT_DDR |= (1<<SPI_MOSI) | (1<<SPI_SCK) | (1<<SPI_SS);
+	SPI_PORT_DDR |= (1<<SPI_MOSI) | (1<<SPI_SCK) | (1<<SPI_SS) | (1<<IO_BOARD_SS);
 
 	//Set MISO as input pin
 	SPI_PORT_DDR &= ~(1<<SPI_MISO);
@@ -44,11 +45,13 @@ uint8_t SPI_recieve_byte(void) {
 void SPI_select(void) {
 	//Set !SS to 0 to select the slave
 	SPI_PORT &= ~(1<<SPI_SS);
+	//SPI_PORT &= ~(1<<PB7);
 }
 
 void SPI_deselect(void) {
 	//Set !SS to 1 to deselect the slave
 	SPI_PORT |= (1<<SPI_SS);
+	//SPI_PORT |= (1<<PB7);
 }
 
 void SPI_test_loop(void){

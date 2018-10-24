@@ -9,7 +9,7 @@
 void CAN_init(void){
 
     MCP_bit_modify(MCP_RXB0CTRL, MCP_RX_BUFF_OP_MODE_BITS, 0xFF);
-    MCP_send_single_data_byte(MCP_CANCTRL, MODE_LOOPBACK);
+    MCP_send_single_data_byte(MCP_CANCTRL, MODE_NORMAL);
 
     CAN_message_interrupt_init();
 
@@ -60,6 +60,7 @@ int CAN_clear_to_send(){
 }
 
 int CAN_error(){
+
     if(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), MCP_TX_ERR_DETECTED_BIT)){
         return -1; //Error in TXREQ, transmitting error.
     }
@@ -75,11 +76,12 @@ void CAN_reset_interrupt_flag(){
 }
 
 void CAN_message_interrupt_init(){
+    //printf("test\r\n");
     MCP_bit_modify(MCP_CANINTE, MCP_RX_BUFF0_FULL_ENABLE, 0xFF);   //Interupt enable
-    EIMSK = (1 << INT0);
-    MCUCR = (1 << ISC01) | (0 << ISC00);
-    //DDRD = (1 << PD2);
-    PORTD = (1 << PD0);
-
+    EIMSK &= ~(1 << INT0);
+    EICRB |= (1 << ISC01);
+    EICRB &= ~(1 << ISC00);
+    EIMSK |= (1 << INT0);
+    PORTD |= (1 << PD0);
     sei();
 }

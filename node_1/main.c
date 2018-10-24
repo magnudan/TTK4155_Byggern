@@ -10,7 +10,7 @@
 #include "spi.h"
 #include "MCP2515.h"
 #include "can.h"
-
+#include "joystick_driver.h"
 #include <stdio.h>
 #include <avr/io.h>
 #include <util/delay.h>
@@ -99,14 +99,17 @@ int main(void){
     Can_block my_can_block = {1, 3, { 0xFF, 0xAA, 0x00}};
     CAN_reset_interrupt_flag();
     while(1){
+
+
           //printf("%d\n", CAN_send(&my_can_block));
           //CAN_reset_interrupt_flag();
           //CAN_reset_interrupt_flag();
-
-          CAN_send(&my_can_block);
+          joystick_send_position();
+          _delay_ms(100);
+          //CAN_send(&my_can_block);
 
           //CAN_reset_interrupt_flag();
-
+          //testFunction_2();
           //printf("%d\n", MCP_read_single_data_byte(MCP_CANINTF));
           //printf("%d\n", MCP_read_single_data_byte(0x2C));
           /*_delay_ms(300);
