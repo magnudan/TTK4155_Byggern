@@ -8,6 +8,8 @@
 #include "MCP2515.h"
 #include "spi.h"
 #include "pwm.h"
+#include "TWI_Master.h"
+#include "dac.h"
 
 void main(){
     uart_init();
@@ -15,14 +17,18 @@ void main(){
     MCP_init();
     CAN_init();
     PWM_init();
+    DAC_init();
+    //TWCR = (1<<TWIE)|(1<<TWINT);
 
-    Can_block my_can_block = {1, 3, { 0xFF, 0xAA, 0x00}};
     uint8_t i = 0;
     while(1){
+        DAC_send(10);
+
       //printf("%d\n", CAN_send(&my_can_block));
       //CAN_reset_interrupt_flag();
       //CAN_reset_interrupt_flag();
       /*
+
       _delay_ms(200);
       printf("%d\r\n", CAN_send(&my_can_block));
       _delay_ms(200);printf("%d\r\n", MCP_read_status());
@@ -49,22 +55,19 @@ void main(){
       for(int i = 0; i < my_other_can_block.length; i++){
           //printf("(%d)\r\n", my_other_can_block.data[i]);
       }*/
-      //printf("test");
-
       //CAN_reset_interrupt_flag()
-
+      _delay_ms(100);
       //printf("Hei\n\r");
   }
 }
 
-ISR(INT0_vect){
+ISR(INT2_vect){
     Can_block received_can_block = CAN_recieve(1);
-    //printf("%0x16d\r\n", my_other_can_block.length);
-    switch (received_can_block.id) {
+    switch (received_can_block.data[0]) {
         case  1:{
-            int x_pos = received_can_block.data[0];
-            int y_pos = received_can_block.data[1];
-            //printf("X-position: %d Y-position: %d\r\n",received_can_block.data[0], received_can_block.data[1]);
+            int x_pos = received_can_block.data[1];
+            int y_pos = received_can_block.data[2];
+            printf("X-position: %d Y-position: %d\r\n",x_pos, y_pos);
             PWM_set_angle(x_pos);
             break;
         }
