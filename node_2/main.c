@@ -13,16 +13,17 @@
 
 void main(){
     uart_init();
+    /*
     SPI_init();
     MCP_init();
     CAN_init();
-    PWM_init();
+    PWM_init();*/
     DAC_init();
-    //TWCR = (1<<TWIE)|(1<<TWINT);
-
+    sei();
     uint8_t i = 0;
     while(1){
-        DAC_send(10);
+        for (uint8_t i = 0; i < 255; i++){DAC_send(i); _delay_ms(10);}
+
 
       //printf("%d\n", CAN_send(&my_can_block));
       //CAN_reset_interrupt_flag();

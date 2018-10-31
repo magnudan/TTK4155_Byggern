@@ -186,6 +186,7 @@ ISR(TWI_vect)
       }
       break;
     case TWI_MRX_DATA_NACK:     // Data byte has been received and NACK tramsmitted
+        printf("TEST!\r\n");
       TWI_buf[TWI_bufPtr] = TWDR;
       TWI_statusReg.lastTransOK = TRUE;                 // Set status bits to completed successfully.
       TWCR = (1<<TWEN)|                                 // TWI Interface enabled
@@ -202,7 +203,7 @@ ISR(TWI_vect)
     case TWI_MTX_ADR_NACK:      // SLA+W has been tramsmitted and NACK received
     case TWI_MRX_ADR_NACK:      // SLA+R has been tramsmitted and NACK received
     case TWI_MTX_DATA_NACK:     // Data byte has been tramsmitted and NACK received
-//    case TWI_NO_STATE              // No relevant state information available; TWINT = �0�
+//    case TWI_NO_STATE              // No relevant state information available; TWINT = \930\94
     case TWI_BUS_ERROR:         // Bus error due to an illegal START or STOP condition
     default:
       TWI_state = TWSR;                                 // Store TWSR and automatically sets clears noErrors bit.
