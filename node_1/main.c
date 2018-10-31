@@ -101,14 +101,13 @@ int main(void){
     while(1){
 
         print_multifunction_card();
-          //printf("%d\n", CAN_send(&my_can_block));
-          //CAN_reset_interrupt_flag();
-          //CAN_reset_interrupt_flag();
-         //joystick_send_position();
-          _delay_ms(100);
-          //CAN_send(&my_can_block);
+        //printf("%d\n", CAN_send(&my_can_block));
+        //CAN_reset_interrupt_flag();
+        //CAN_reset_interrupt_flag();
+        joystick_send();
+        //CAN_send(&my_can_block);
 
-          //CAN_reset_interrupt_flag();
+        //CAN_reset_interrupt_flag();
           //testFunction_2();
           //printf("%d\n", MCP_read_single_data_byte(MCP_CANINTF));
           //printf("%d\n", MCP_read_single_data_byte(0x2C));

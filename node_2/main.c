@@ -10,20 +10,22 @@
 #include "pwm.h"
 #include "TWI_Master.h"
 #include "dac.h"
+#include "motor_driver.h"
 
 void main(){
     uart_init();
-    /*
+
     SPI_init();
     MCP_init();
     CAN_init();
-    PWM_init();*/
+    PWM_init();
     DAC_init();
+    motor_init();
+    solenoid_init();
     sei();
     uint8_t i = 0;
     while(1){
-        for (uint8_t i = 0; i < 255; i++){DAC_send(i); _delay_ms(10);}
-
+        //for (uint8_t i = 0; i < 255; i++){DAC_send(i); _delay_ms(10);}
 
       //printf("%d\n", CAN_send(&my_can_block));
       //CAN_reset_interrupt_flag();
@@ -57,8 +59,8 @@ void main(){
           //printf("(%d)\r\n", my_other_can_block.data[i]);
       }*/
       //CAN_reset_interrupt_flag()
-      _delay_ms(100);
       //printf("Hei\n\r");
+      _delay_ms(50);
   }
 }
 
@@ -69,7 +71,11 @@ ISR(INT2_vect){
             int x_pos = received_can_block.data[1];
             int y_pos = received_can_block.data[2];
             printf("X-position: %d Y-position: %d\r\n",x_pos, y_pos);
-            PWM_set_angle(x_pos);
+            PWM_set_angle(y_pos);
+            motor_set_speed_from_joystick(x_pos);
+            if(received_can_block.data[3] == 1){
+                solenoid_punch();
+            }
             break;
         }
         default:

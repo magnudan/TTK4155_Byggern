@@ -1,1 +1,1 @@
-void joystick_send_position();
+void joystick_send();
