@@ -1,3 +1,4 @@
+#include "adc.h"
 #include "node_setup.h"
 #include "uart_driver.h"
 #include <util/delay.h>
@@ -8,7 +9,7 @@ void adc_init(){
     //set reference to internal 2.4v
     set_bit(ADMUX, REFS1);
     set_bit(ADMUX, REFS0);
-    
+
     //enable auto-trigger of the adc
     set_bit(ADCSRA, ADATE);
 

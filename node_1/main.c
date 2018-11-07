@@ -105,6 +105,7 @@ int main(void){
         //CAN_reset_interrupt_flag();
         //CAN_reset_interrupt_flag();
         joystick_send();
+        touch_send();
         //CAN_send(&my_can_block);
 
         //CAN_reset_interrupt_flag();
