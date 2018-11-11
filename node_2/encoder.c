@@ -13,6 +13,9 @@ void encoder_init(){
     set_bit(DDRH, NOT_OE);
     set_bit(DDRH, NOT_RST);
 
+    write_bit(0, PORTH, NOT_RST);
+    _delay_ms(1);
+    write_bit(1, PORTH, NOT_RST);
     DDRK &= 0; //Set all ports in K-register to read
 
     _delay_ms(20);
@@ -34,9 +37,9 @@ int16_t encoder_read(){
 
     low_byte = PINK;
 
-    write_bit(0, PORTH, NOT_RST);
+    //write_bit(0, PORTH, NOT_RST);
     write_bit(1, PORTH, NOT_OE);
-    write_bit(1, PORTH, NOT_RST);
+    //write_bit(1, PORTH, NOT_RST);
 
     return - (high_byte << 8) + low_byte;
 }

@@ -34,8 +34,6 @@ void print_multifunction_card(){
     printf("\tButton Joystick: ");
     printf("%d", button_read(BUTTON_JOYSTICK));
     printf("\n\r");
-    _delay_ms(200);
-    _delay_us(30);
 }
 
 void testFunction_2(){
@@ -100,7 +98,7 @@ int main(void){
     CAN_reset_interrupt_flag();
     while(1){
 
-        print_multifunction_card();
+        //print_multifunction_card();
         //printf("%d\n", CAN_send(&my_can_block));
         //CAN_reset_interrupt_flag();
         //CAN_reset_interrupt_flag();
@@ -133,8 +131,11 @@ ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed inte
 
 ISR(INT0_vect){
     Can_block my_other_can_block = CAN_recieve(1);
-    //printf("%0x16d\r\n", my_other_can_block.length);
-    for(int i = 0; i < my_other_can_block.length; i++){
-        printf("(%d)\r\n", my_other_can_block.data[i]);
-    }
+    char test[] = "Hei";
+    printf("Data from CAN: %d, %d\r\n", my_other_can_block.data[0], my_other_can_block.data[1]);
+    oled_home();
+    oled_write_line((char)(my_other_can_block.data[0]));
+    oled_write_line(test);
+    oled_write_line((char)(my_other_can_block.data[1]));
+    oled_refresh_display();
 }
