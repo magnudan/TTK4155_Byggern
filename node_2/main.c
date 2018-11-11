@@ -11,20 +11,34 @@
 #include "TWI_Master.h"
 #include "dac.h"
 #include "motor_driver.h"
+#include "encoder.h"
+#include "adc.h"
+
+#define JOYSTICK 1
+#define TOUCH 2
 
 void main(){
     uart_init();
+    //adc_init();
+    PWM_init();
+
+    sei();
+    DAC_init();
+    motor_init();
 
     SPI_init();
     MCP_init();
     CAN_init();
-    PWM_init();
-    DAC_init();
-    motor_init();
+
+
+
     solenoid_init();
-    sei();
-    uint8_t i = 0;
+    //encoder_init();
     while(1){
+      Can_block my_can_block  = {1, 2, {0xFF, 0xDA}};
+      //printf("Data from CAN: %d\r\n", encoder_read() << 8 + encoder_read());
+      CAN_send(&my_can_block);
+        //printf("Motor position: %d\n\r", encoder_read());
         //for (uint8_t i = 0; i < 255; i++){DAC_send(i); _delay_ms(10);}
 
       //printf("%d\n", CAN_send(&my_can_block));
@@ -59,23 +73,29 @@ void main(){
           //printf("(%d)\r\n", my_other_can_block.data[i]);
       }*/
       //CAN_reset_interrupt_flag()
-      //printf("Hei\n\r");
-      _delay_ms(50);
+      //printf("Encoder: %d\n\r", encoder_read());
   }
 }
 
 ISR(INT2_vect){
-    Can_block received_can_block = CAN_recieve(1);
+    Can_block received_can_block = CAN_recieve(JOYSTICK);
     switch (received_can_block.data[0]) {
-        case  1:{
+        case JOYSTICK:{
             int x_pos = received_can_block.data[1];
             int y_pos = received_can_block.data[2];
-            printf("X-position: %d Y-position: %d\r\n",x_pos, y_pos);
-            PWM_set_angle(y_pos);
-            motor_set_speed_from_joystick(x_pos);
-            if(received_can_block.data[3] == 1){
-                solenoid_punch();
-            }
+            //printf("X-position: \t%d | Y-position: %d\r\n",x_pos, y_pos);
+            PWM_set_angle(x_pos);
+            //motor_set_speed_from_joystick(x_pos);
+            //solenoid_punch(received_can_block.data[3]);
+            break;
+        }
+        case TOUCH :{
+            int l_slider = received_can_block.data[1];
+            int r_slider = received_can_block.data[2];
+            //printf("Left slider: \t%d | Right slider: %d\n\r", l_slider, r_slider);
+            position_regulator(l_slider);
+            //PWM_set_angle(r_slider);
+            solenoid_punch(received_can_block.data[3]);
             break;
         }
         default:

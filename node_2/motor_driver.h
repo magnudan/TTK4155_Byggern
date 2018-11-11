@@ -14,4 +14,7 @@ void motor_set_speed_from_joystick(uint8_t joystick_output);
 
 
 void solenoid_init();
-void solenoid_punch();
+void solenoid_punch(int signal);
+
+void position_regulator(uint8_t ref_position);
+void speed_regulator(int8_t ref_speed);
