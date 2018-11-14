@@ -1,26 +1,22 @@
+import socket
 import serial
 from time import sleep
-import socket
 
+HOST = 'localhost'
+PORT = 65433
 
-# Creating UDP recieveing socket
-UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.bind((HOST, PORT))
+print("listening to port", PORT)
+sock.listen()
+conn, addr = sock.accept()
+print("connected to", addr)
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((UDP_IP, UDP_PORT))
-print("> Opened socket on:", UDP_PORT)
-
-# Creating Serial port for chip
-ser = serial.Serial('/dev/ttyUSB0', stopbits=2, bytesize=8, baudrate=9600)
-print("> Opened serial on:", ser.name)
-
-
+ser = serial.Serial('/dev/ttyUSB0', bytesize=8, stopbits=2, baudrate=9600)
+print("opened serial connection")
 while True:
-    data, ip_data = sock.recvfrom(256)
-    print(data)
-    sleep(0.1)
+    data = conn.recv(1024)
+    print("recieved data from client", data)
     ser.write(data)
-    response = ser.readline()
-    print(response.decode("utf-8"), end='')
     sleep(1)
+    print("relayed data to MCU", data)
