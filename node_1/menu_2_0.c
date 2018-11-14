@@ -4,6 +4,7 @@
 #include "game.h"
 #include "adc.h"
 #include "button.h"
+#include <avr/interrupt.h>
 
 
 //--------------------------------------------
@@ -88,11 +89,12 @@ void menu_print()
 
 void menu_print_OLED()
 {
+    oled_home();
     for(int i = 0; i<MAX_MENU_SIZE; i++)
     {
         if (i == current_menu -> current_menu_item)
         {
-            oled_print_string_SRAM("> ");
+            oled_print_string_SRAM(">");
         }
         else
         {
@@ -102,6 +104,7 @@ void menu_print_OLED()
         {
             oled_print_string_SRAM(current_menu -> menu_items[i].name);
         }
+        oled_goto_line(i + 1);
     }
 }
 
@@ -132,8 +135,8 @@ Menu game_menu =
     "Game menu:",
     &top_menu,
     {
-        {"With position control:",     NULL,       NULL}
-        //{"sub menu item 2",     NULL,       NULL},
+        {"With position control:",     NULL,       NULL},
+        {"With speed:",     NULL,       NULL},
         //{"sub menu item 3",     NULL,       NULL}
     }
 };
@@ -146,9 +149,11 @@ void menu_init(){
 
 void menu_loop(){
     while(1){
-        printf("Test\r\n");
+        printf("hENLo\r\n");
+        cli();
         oled_clear_all_SRAM();
         menu_print_OLED();
+        sei();
         if (adc_read_channel(JOYSTICK_Y) < 40) {
             menu_down();
         }

@@ -2,7 +2,7 @@ import socket
 import serial
 from time import sleep
 
-HOST = 'localhost'
+HOST = '10.100.23.180'
 PORT = 65433
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

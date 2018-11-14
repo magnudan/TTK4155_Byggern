@@ -2,44 +2,44 @@
 #include "node_setup.h"
 #include <avr/io.h>
 
-#define DOWN_PIN   PG5
-#define LEFT_PIN   PE5
-#define UP_PIN     PE4
-#define RIGHT_PIN  PE1
-#define BUTTON_PIN PE0
+#define DOWN_PIN   PA0
+#define LEFT_PIN   PA2
+#define UP_PIN     PA4
+#define RIGHT_PIN  PA6
+#define BUTTON_PIN PC7
 
 void analog_controller_init(){
   //Setting data direction to input
-  write_bit(INPUT, DDRG, DOWN_PIN);
-  write_bit(INPUT, DDRE, LEFT_PIN);
-  write_bit(INPUT, DDRE, UP_PIN);
-  write_bit(INPUT, DDRE, RIGHT_PIN);
-  write_bit(INPUT, DDRE, BUTTON_PIN);
+  write_bit(INPUT, DDRA, DOWN_PIN);
+  write_bit(INPUT, DDRA, LEFT_PIN);
+  write_bit(INPUT, DDRA, UP_PIN);
+  write_bit(INPUT, DDRA, RIGHT_PIN);
+  write_bit(INPUT, DDRC, BUTTON_PIN);
 
   //Enabling pull-up resistors
-  write_bit(1, PORTG, DOWN_PIN);
-  write_bit(1, PORTE, LEFT_PIN);
-  write_bit(1, PORTE, UP_PIN);
-  write_bit(1, PORTE, RIGHT_PIN);
-  write_bit(1, PORTE, BUTON_PIN);
+  write_bit(1, PORTA, DOWN_PIN);
+  write_bit(1, PORTA, LEFT_PIN);
+  write_bit(1, PORTA, UP_PIN);
+  write_bit(1, PORTA, RIGHT_PIN);
+  write_bit(1, PORTC, BUTTON_PIN);
 }
 
 uint8_t analog_controller_get_down(){
-  return test_bit(DDRG, DOWN_PIN);
+  return !(test_bit(PINA, DOWN_PIN) >> DOWN_PIN);
 }
 
 uint8_t analog_controller_get_left(){
-  return test_bit(DDRE, LEFT_PIN);
+  return !(test_bit(PINA, LEFT_PIN) >> LEFT_PIN);
 }
 
 uint8_t analog_controller_get_up(){
-  return test_bit(DDRE, UP_PIN);
+  return !(test_bit(PINA, UP_PIN) >> UP_PIN);
 }
 
 uint8_t analog_controller_get_right(){
-  return test_bit(DDRE, RIGHT_PIN);
+  return !(test_bit(PINA, RIGHT_PIN) >> RIGHT_PIN);
 }
 
 uint8_t analog_controller_get_button(){
-  return test_bit(DDRE, BUTTON_PIN);
+  return !(test_bit(PINC, BUTTON_PIN) >> BUTTON_PIN);
 }

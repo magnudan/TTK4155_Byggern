@@ -1,6 +1,8 @@
 #ifndef analog_controller_H_
 #define analog_controller_H_
 
+#include <avr/io.h>
+
 #endif
 
 void analog_controller_init();

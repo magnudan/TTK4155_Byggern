@@ -27,10 +27,10 @@ void SPI_init() {
 	//SPI_PORT_DDR &= ~(1<<SPI_MISO);
 
 	//Enable SPI in master mode and set clock rate fosc/16
-	write_bit(1, SPCR, SPE);
-	write_bit(1, SPCR, MSTR);
-	write_bit(1, SPR0);
-	//SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
+	//write_bit(1, SPCR, SPE);
+	//write_bit(1, SPCR, MSTR);
+	//write_bit(1, SPCR, SPR0);
+	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
 }
 
 void SPI_transmit_byte(uint8_t data_byte) {
@@ -55,6 +55,7 @@ uint8_t SPI_recieve_byte() {
 void SPI_select(){
 	//Set !SS to 0 to select the slave
 	write_bit(0, SPI_PORT, SPI_SS);
+	write_bit(0, SPI_PORT, PB7);
 	//SPI_PORT &= ~(1<<SPI_SS);
 	//SPI_PORT &= ~(1<<PB7);
 }
@@ -62,6 +63,7 @@ void SPI_select(){
 void SPI_deselect(){
 	//Set !SS to 1 to deselect the slave
 	write_bit(1, SPI_PORT, SPI_SS);
+	write_bit(1, SPI_PORT, PB7);
 	//SPI_PORT |= (1<<SPI_SS);
 	//SPI_PORT |= (1<<PB7);
 }

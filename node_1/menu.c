@@ -40,7 +40,6 @@ void init_menu(){
 
 void print_current_menu_level()
 {
-	oled_clear_all_SRAM();
 	Node* printing_node = current_node;
 	do
 	{
@@ -84,6 +83,7 @@ void menu_loop()
 {
 	while(1)
 	{
+
 		printf("test\r\n");
 		if (adc_read_channel(JOYSTICK_Y) < 40) {
 			move_pointer_in_menu(DOWN);
@@ -97,7 +97,6 @@ void menu_loop()
 		else if(adc_read_channel(JOYSTICK_X) > 200){
 			move_pointer_in_menu(RIGHT);
 		}
-
 		print_current_menu_level();
 		/*
 		if (button_read(BUTTON_L)) {
@@ -110,7 +109,7 @@ void menu_loop()
 			move_pointer_in_menu(RIGHT);
 		}
 		*/
-		oled_refresh_display();
-		_delay_ms(200);
+		//oled_refresh_display();
+		//_delay_ms(200);
 	}
 }

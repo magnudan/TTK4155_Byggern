@@ -5,7 +5,7 @@
 #include "uart_driver.h"
 #include "fonts.h"
 #include "sram.h"
-
+#include <avr/interrupt.h>
 
 volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
 volatile char *ext_oledd = (char *) OLEDD_START_ADDR;
@@ -167,6 +167,7 @@ void oled_write(unsigned int data, int column, int row){
 }
 
 void oled_refresh_display(){
+    cli();
     oled_home();
     for(unsigned int adress = 1024; adress < 2047; adress++){
         *ext_oledd = SRAM_read(adress);
@@ -178,7 +179,9 @@ void oled_refresh_display(){
         }
     }
     *ext_oledd = SRAM_read(2047);
+
     oled_home();
+    sei();
 }
 
 void oled_draw_line(int x0, int y0, int x1, int y1){

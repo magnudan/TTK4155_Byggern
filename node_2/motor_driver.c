@@ -34,15 +34,13 @@ void motor_init(){
     write_bit(OUTPUT, DDRH, DIR_PIN);   //Set data direction
 
 
-    cli();
+
     _delay_ms(10);
     motor_set_direction_left();
     motor_set_speed(MOTOR_INIT_SPEED);
     _delay_ms(2000);
     encoder_init();
     motor_set_speed(MOTOR_STOP);
-    sei();
-
 }
 
 void motor_set_direction_left(){

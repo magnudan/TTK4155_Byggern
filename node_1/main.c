@@ -17,7 +17,7 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "timer.h"
-
+#include <stdlib.h>
 
 void print_multifunction_card(){
     volatile char readout[] = " ";
@@ -88,13 +88,13 @@ int main(void){
     //Can_block my_can_block = {1, 3, { 0xFF, 0xAA, 0x00}};
     //CAN_reset_interrupt_flag();
     while(1){
-        //printf("Test\r\n");
-        //joystick_send();
-        //touch_send();
+        joystick_send();
+        touch_send();
         printf("test\r\n");
         menu_loop();
         //testFunction_2();
-
+        //Can_block recieved_can_block = CAN_recieve(1);
+        //printf("Can: %d\r\n", recieved_can_block.data[1]);
     }
 
 }
@@ -102,24 +102,16 @@ int main(void){
 
 ISR(TIMER1_COMPA_vect)    //interrupt routine to update oled-display at fixed intervals
 {
-
-    OCR1A = 0x80;
     oled_refresh_display();
+    TCNT1 = 0x00;
 }
 
 
 ISR(INT0_vect){
-
-    /*
-    Can_block my_other_can_block = CAN_recieve(1);
-    char test[] = "Hei";
-    printf("Data from CAN: %d, %d\r\n", my_other_can_block.data[0], my_other_can_block.data[1]);
-    oled_home();
-    oled_write_line((char)(my_other_can_block.data[0]));
-    oled_write_line(test);
-    oled_write_line((char)(my_other_can_block.data[1]));
-    oled_refresh_display
-    */
-
+    Can_block my_other_can_block = CAN_recieve(1);/*
+    char number[6];
+    number = utoa(my_other_can_block.data[0], 6, 10);*/
+    oled_print_string_SRAM("Hei!");
+    oled_print_string_SRAM(utoa(my_other_can_block.data[0], 6, 10));
 
 }

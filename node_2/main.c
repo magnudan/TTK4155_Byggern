@@ -15,14 +15,18 @@
 #include "adc.h"
 #include "timer.h"
 #include "score_counter.h"
-
+#include "analog_controller.h"
 
 #define JOYSTICK 1
 #define TOUCH 2
-#define MOTOR_INIT_CAN 3
+#define RESET_NODE_2 3
 uint8_t wolol = 0;
+uint8_t run_motor_init = 1;
+
 
 void main(){
+    write_bit(1, DDRB, PB4);
+    write_bit(1, PORTB, PB4);
     adc_init();
     uart_init();
     //adc_init();
@@ -30,8 +34,8 @@ void main(){
 
     sei();
     DAC_init();
-    motor_init();
 
+    motor_init();
     SPI_init();
     MCP_init();
     CAN_init();
@@ -41,14 +45,18 @@ void main(){
     solenoid_init();
     //encoder_init();
     score_counter_init();
+    analog_controller_init();
     while(1){
-      //Can_block my_can_block  = {1, 2, {0xFF, 0xDA}};
-      //printf("Data from CAN: %d\r\n", encoder_read() << 8 + encoder_read());
-      //CAN_send(&my_can_block);
 
-      //score_counter_update();
+      //printf("Data from CAN: %d\r\n", encoder_read() << 8 + encoder_read());
+
       score_counter_update();
-      printf("Score: %d\r\n", score_counter_get());
+      Can_block my_can_block  = {1, 1, {score_counter_get()}};
+      CAN_send(&my_can_block);
+      //printf("Score: %d\r\n", score_counter_get());
+
+      //printf("Button: %d Up: %d Right: %d Down: %d Left: %d\r\n", analog_controller_get_button(), analog_controller_get_up(), analog_controller_get_right(), analog_controller_get_down(), analog_controller_get_left());
+
       _delay_ms(300);
 
   }
@@ -80,8 +88,8 @@ ISR(INT2_vect){
             solenoid_punch(received_can_block.data[3]);
             break;
         }
-        case MOTOR_INIT_CAN :{
-            //motor_init();
+        case RESET_NODE_2 :{
+            write_bit(0, PORTB, PB4);
             break;
         }
         default:

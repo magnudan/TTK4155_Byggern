@@ -9,4 +9,4 @@ void score_counter_init();
 uint8_t score_counter_get();
 void score_counter_add();
 void score_counter_reset();
-//void score_counter_update();
+void score_counter_update();
