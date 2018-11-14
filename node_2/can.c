@@ -78,10 +78,10 @@ void CAN_reset_interrupt_flag(){
 void CAN_message_interrupt_init(){
     //printf("test\r\n");
     MCP_bit_modify(MCP_CANINTE, MCP_RX_BUFF0_FULL_ENABLE, 0xFF);   //Interupt enable
-    EIMSK &= ~(1 << INT2);
-    EICRA |= (1 << ISC21);
-    EICRA &= ~(1 << ISC20);
-    EIMSK |= (1 << INT2);
-    PORTD |= (1 << PD2);
+    write_bit(0, EIMSK, INT2);
+    write_bit(1, EICRA, ISC21);
+    write_bit(0, EICRA, ISC20);
+    write_bit(1, EIMSK, INT2);
+    write_bit(1, PORTD, PD2);
     sei();
 }
