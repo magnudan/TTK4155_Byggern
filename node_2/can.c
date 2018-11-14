@@ -5,15 +5,30 @@
 #include <avr/interrupt.h>
 #include "node_setup.h"
 
+#define MCP_SID0_HIGH   0x31
+#define MCP_SID0_LOW    0x32
+#define MCP_RXB0DLC     0x65
+#define MCP_RXB1DLC     0x75
+#define MCP_TXB0DLC     0x35
+#define MCP_TXB1DLC     0x45
+#define MCP_RXB         0x66
+#define MCP_TXB         0x36
+
+#define MCP_TX_PRI_BITS          0b00000011
+#define MCP_DATA_LENGTH_BITS     0b00001111
+#define MCP_RX_BUFF_OP_MODE_BITS 0b01100000
+#define MCP_MSG_LOST_ARB_BIT     5
+#define MCP_TX_ERR_DETECTED_BIT  4
+#define MCP_MSG_TX_REQ_BIT       3
+#define MCP_RX_BUFF0_FULL_FLAG   0b00000001
+#define MCP_RX_BUFF0_FULL_ENABLE 0b00000001
+
 
 void CAN_init(void){
-
     MCP_bit_modify(MCP_RXB0CTRL, MCP_RX_BUFF_OP_MODE_BITS, 0xFF);
     MCP_send_single_data_byte(MCP_CANCTRL, MODE_NORMAL);
 
     CAN_message_interrupt_init();
-
-
 }
 
 int CAN_send(Can_block* can_block){
@@ -41,8 +56,8 @@ int CAN_send(Can_block* can_block){
 Can_block CAN_recieve(uint8_t buffer){
     Can_block received_can_block;
 
-
-    received_can_block.id = (MCP_read_single_data_byte(MCP_SID0_HIGH) << 3) | (MCP_read_single_data_byte(MCP_SID0_LOW) >> 5);
+    received_can_block.id = (MCP_read_single_data_byte(MCP_SID0_HIGH) << 3)
+                          | (MCP_read_single_data_byte(MCP_SID0_LOW) >> 5);
     received_can_block.length = (MCP_read_single_data_byte(MCP_RXB0DLC)) & (MCP_DATA_LENGTH_BITS);
 
 
@@ -76,7 +91,6 @@ void CAN_reset_interrupt_flag(){
 }
 
 void CAN_message_interrupt_init(){
-    //printf("test\r\n");
     MCP_bit_modify(MCP_CANINTE, MCP_RX_BUFF0_FULL_ENABLE, 0xFF);   //Interupt enable
     write_bit(0, EIMSK, INT2);
     write_bit(1, EICRA, ISC21);

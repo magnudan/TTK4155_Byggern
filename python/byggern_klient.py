@@ -1,15 +1,15 @@
 import socket
-import time
+from time import sleep
 
-UDP_IP = "10.24.37.28"
-UDP_PORT = 5005
+HOST = 'localhost'
+PORT = 65433
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-while True:
-    message = b'd'
-    sock.sendto(message, (UDP_IP, UDP_PORT))
-    print("sent message", message, "to", UDP_IP+":"+str(UDP_PORT))
-    time.sleep(1)
-
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+    sock.connect((HOST, PORT))
+    print("connected to", HOST, PORT)
+    while True:
+        message = b'c'
+        sock.send(message)
+        print("sent message", message)
+        sleep(1)
 
