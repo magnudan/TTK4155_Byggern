@@ -4,4 +4,4 @@
 #endif
 
 void PWM_init();
-void PWM_set_angle(uint8_t angle);
+void PWM_set_angle(uint8_t angle); //angle is a number between 0 and 255
