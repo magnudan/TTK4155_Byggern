@@ -12,3 +12,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.send(message)
         print("sent message", message)
         sleep(1)
+
