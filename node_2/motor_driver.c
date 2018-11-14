@@ -4,6 +4,7 @@
 #include "encoder.h"
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 
 #define JOYSTIC_THRESHOLD_LEFT 127
 #define JOYSTIC_THRESHOLD_RIGHT 132
@@ -28,12 +29,15 @@ void motor_init(){
     set_bit(PORTH, PH4);
     set_bit(DDRH, PH1);
 
+
+    cli();
     _delay_ms(10);
     motor_set_direction_left();
     motor_set_speed(MOTOR_INIT_SPEED);
     _delay_ms(2000);
     encoder_init();
     motor_set_speed(MOTOR_STOP);
+    sei();
 
 }
 
