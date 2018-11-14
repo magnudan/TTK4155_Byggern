@@ -6,7 +6,8 @@
 #include "adc.h"
 #include "button.h"
 #include "oled.h"
-#include "menu.h"
+//#include "menu.h"
+#include "menu_2_0.h"
 #include "spi.h"
 #include "MCP2515.h"
 #include "can.h"
@@ -86,7 +87,7 @@ int main(void){
     oled_init();
     //timer_interupt_init();
     oled_clear_all_SRAM();
-    init_menu();
+    menu_init();
     SPI_init();
     MCP_init();
     CAN_init();
@@ -94,40 +95,26 @@ int main(void){
     /*uint64_t data = 0xFF00FF00FF00FF00;
     MCP_send_single_data_byte(MCP_TXB0CTRL, 3);
     MCP_load_TX_buffer(data);*/
-    Can_block my_can_block = {1, 3, { 0xFF, 0xAA, 0x00}};
-    CAN_reset_interrupt_flag();
+    //Can_block my_can_block = {1, 3, { 0xFF, 0xAA, 0x00}};
+    //CAN_reset_interrupt_flag();
     while(1){
-
-        //print_multifunction_card();
-        //printf("%d\n", CAN_send(&my_can_block));
-        //CAN_reset_interrupt_flag();
-        //CAN_reset_interrupt_flag();
-        joystick_send();
-        touch_send();
-        //CAN_send(&my_can_block);
-
-        //CAN_reset_interrupt_flag();
-          //testFunction_2();
-          //printf("%d\n", MCP_read_single_data_byte(MCP_CANINTF));
-          //printf("%d\n", MCP_read_single_data_byte(0x2C));
-          /*_delay_ms(300);
-          //printf("%d\n", MCP_read_single_data_byte(0x2C));
-          Can_block my_other_can_block = CAN_recieve(1);
-          //printf("%0x16d\r\n", my_other_can_block.length);
-          for(int i = 0; i < my_other_can_block.length; i++){
-              //printf("(%d)\r\n", my_other_can_block.data[i]);
-          }*/
-          //printf("test");
+        //printf("Test\r\n");
+        //joystick_send();
+        //touch_send();
+        menu_loop();
+        //testFunction_2();
 
     }
+
 }
 
 /*
 ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed intervals
 {
-    //oled_refresh_display();
+    oled_refresh_display();
 }
 */
+
 
 ISR(INT0_vect){
     Can_block my_other_can_block = CAN_recieve(1);

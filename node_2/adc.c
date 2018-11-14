@@ -7,22 +7,30 @@
 
 void adc_init(){
     //set reference to internal 2.4v
-    set_bit(ADMUX, REFS1);
-    set_bit(ADMUX, REFS0);
+    write_bit(1, ADMUX, REFS1);
+    write_bit(1, ADMUX, REFS0);
 
     //enable auto-trigger of the adc
-    set_bit(ADCSRA, ADATE);
+    write_bit(1, ADCSRA, ADATE);
 
     //enable adc
-    set_bit(ADCSRA, ADEN);
+    write_bit(1, ADCSRA, ADEN);
 
     //set clock prescaler to 1/128
-    set_bit(ADCSRA, ADPS2);
-    set_bit(ADCSRA, ADPS1);
-    set_bit(ADCSRA, ADPS0);
+    write_bit(1, ADCSRA, ADPS2);
+    write_bit(1, ADCSRA, ADPS1);
+    write_bit(1, ADCSRA, ADPS0);
 
     //start the first adc cycle
-    set_bit(ADCSRA, ADSC);
+    write_bit(1, ADCSRA, ADSC);
+
+    //Read input from AD0
+    write_bit(0, ADMUX, MUX0);
+    write_bit(0, ADMUX, MUX1);
+    write_bit(0, ADMUX, MUX2);
+    write_bit(0, ADMUX, MUX3);
+    write_bit(0, ADMUX, MUX4);
+
 }
 
 uint16_t adc_read(){

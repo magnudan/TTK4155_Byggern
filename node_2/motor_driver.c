@@ -11,10 +11,10 @@
 #define MOTOR_INIT_SPEED 100
 #define MAGIC_FRACTION 39
 
-#define T_POS   0.1
-#define KP_POS  1.5
-#define KI_POS  0.5
-#define KD_POS
+#define T_POS   1/50
+#define KP_POS  3
+#define KI_POS  1
+#define KD_POS  3
 
 #define T_SAMPLE  0.0000001
 #define T_SPEED   0.1
@@ -87,17 +87,19 @@ void solenoid_punch(int signal){
 
 void position_regulator(uint8_t ref_position){
     static int integrator = 0;
-    int error;
+    static int last_error = 0;
     uint8_t pos = (uint8_t)(encoder_read() / MAGIC_FRACTION);
-    error = ref_position - pos;
-    integrator += T_POS*error;
-    int new_speed = KP_POS*error + (int)(KI_POS*integrator);
+    int error = ref_position - pos;
+    integrator += error;
+    int derivative = error - last_error;
+    int new_speed = KP_POS*error + (int)(KI_POS*T_POS*integrator) + KD_POS/T_POS*derivative;
     if (new_speed < 0){
         motor_set_direction_left();
     } else {
         motor_set_direction_right();
     }
     motor_set_speed(abs(new_speed));
+    last_error = error;
 }
 
 void speed_regulator(int8_t ref_speed){
