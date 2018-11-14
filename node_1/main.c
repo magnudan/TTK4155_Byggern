@@ -16,6 +16,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include "timer.h"
 
 
 void print_multifunction_card(){
@@ -60,17 +61,6 @@ void testFunction_3(){
     oled_write('O', 50,5);
 }
 
-void timer_interupt_init()
-{
-    TCCR0 = 0x00;
-    TCCR0 = (1<<CS02) | (1<<CS00); //set timer prescaler to 1024
-    TIMSK = (1<<TOIE0); //enable timer0 overflow interrupt
-    //OCR0 = 80;
-    sei();
-}
-
-
-
 
 
 int main(void){
@@ -85,7 +75,7 @@ int main(void){
     adc_init();
     button_init();
     oled_init();
-    //timer_interupt_init();
+    timer_init();
     oled_clear_all_SRAM();
     menu_init();
     SPI_init();
@@ -101,6 +91,7 @@ int main(void){
         //printf("Test\r\n");
         //joystick_send();
         //touch_send();
+        printf("test\r\n");
         menu_loop();
         //testFunction_2();
 
@@ -108,15 +99,18 @@ int main(void){
 
 }
 
-/*
-ISR(TIMER0_OVF_vect)    //interrupt routine to update oled-display at fixed intervals
+
+ISR(TIMER1_COMPA_vect)    //interrupt routine to update oled-display at fixed intervals
 {
+
+    OCR1A = 0x80;
     oled_refresh_display();
 }
-*/
 
 
 ISR(INT0_vect){
+
+    /*
     Can_block my_other_can_block = CAN_recieve(1);
     char test[] = "Hei";
     printf("Data from CAN: %d, %d\r\n", my_other_can_block.data[0], my_other_can_block.data[1]);
@@ -124,5 +118,8 @@ ISR(INT0_vect){
     oled_write_line((char)(my_other_can_block.data[0]));
     oled_write_line(test);
     oled_write_line((char)(my_other_can_block.data[1]));
-    oled_refresh_display();
+    oled_refresh_display
+    */
+
+
 }

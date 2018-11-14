@@ -84,6 +84,7 @@ void menu_loop()
 {
 	while(1)
 	{
+		printf("test\r\n");
 		if (adc_read_channel(JOYSTICK_Y) < 40) {
 			move_pointer_in_menu(DOWN);
 		}

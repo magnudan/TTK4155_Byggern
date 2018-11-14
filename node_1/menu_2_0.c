@@ -164,6 +164,5 @@ void menu_loop(){
         if(button_read(BUTTON_JOYSTICK)){
             menu_run_function();
         }
-        oled_refresh_display();
     }
 }

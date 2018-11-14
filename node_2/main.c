@@ -47,8 +47,8 @@ void main(){
       //CAN_send(&my_can_block);
 
       //score_counter_update();
-      //printf("Score: %d\t ADC reading: %d\r\n", score_counter_get(), adc_read());'
-      printf("wolol: %d\r\n", wolol);
+      score_counter_update();
+      printf("Score: %d\r\n", score_counter_get());
       _delay_ms(300);
 
   }
