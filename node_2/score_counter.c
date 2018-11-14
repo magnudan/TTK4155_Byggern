@@ -5,9 +5,8 @@
 
 #define DIODE_CONNECTION PF0
 #define DIODE_THRESHOLD 500
-#define MAGNUCC_NUMBER 5
 
-//typedef enum STATE {IDLE, UPDATING};
+enum State {IDLE, UPDATING};
 
 uint8_t score = 0;
 
@@ -32,12 +31,14 @@ void score_counter_reset(){
     score = 0;
 }
 
-/*
-void score_counter_update(){
-    static uint8_t measurement_counter = 0;
-    static STATE state = IDLE;
-    if (state = IDLE){
 
+void score_counter_update(){
+    static State state = IDLE;
+    uint8_t diode_reading = diode_read();
+    if ((state == IDLE) && (diode_read < DIODE_THRESHOLD)){
+      state = UPDATING;
+      score_counter_add();
+    } else if ((state == UPDATING) && (diode_read > DIODE_THRESHOLD)){
+      state = IDLE;
     }
 }
-*/
