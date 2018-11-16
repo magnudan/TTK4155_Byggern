@@ -5,6 +5,7 @@
 #include "adc.h"
 #include "button.h"
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 
 //--------------------------------------------
@@ -142,14 +143,13 @@ Menu game_menu =
 };
 
 void menu_init(){
-    menu_link_to_function(&game_menu, 0, game_loop);
-
+    menu_link_to_function(&game_menu, 0, game_loop_position);
+    menu_link_to_function(&game_menu, 1, game_loop_speed);
 }
 
 
 void menu_loop(){
     while(1){
-        printf("hENLo\r\n");
         cli();
         oled_clear_all_SRAM();
         menu_print_OLED();
@@ -169,5 +169,6 @@ void menu_loop(){
         if(button_read(BUTTON_JOYSTICK)){
             menu_run_function();
         }
+        _delay_ms(100);
     }
 }

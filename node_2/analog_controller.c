@@ -1,6 +1,8 @@
 #include "analog_controller.h"
 #include "node_setup.h"
 #include <avr/io.h>
+#include "motor_driver.h"
+#include "pwm.h"
 
 #define DOWN_PIN   PA0
 #define LEFT_PIN   PA2
@@ -42,4 +44,30 @@ uint8_t analog_controller_get_right(){
 
 uint8_t analog_controller_get_button(){
   return !(test_bit(PINC, BUTTON_PIN) >> BUTTON_PIN);
+}
+
+
+void analog_speed_control(){
+    solenoid_punch(analog_controller_get_button);
+    if(analog_controller_get_left){
+      speed_regulator(100);
+      motor_set_direction_left();
+    }
+    else if(analog_controller_get_right){
+      speed_regulator(100);
+      motor_set_direction_right();
+    }
+    else{
+      speed_regulator(0);
+    }
+    if(analog_controller_get_up){
+      //PWM_set_angle(0);
+    }
+    else if(analog_controller_get_down){
+      //PWM_set_angle(255);
+    }
+    else{
+      //PWM_set_angle(128);
+    }
+
 }

@@ -76,22 +76,18 @@ int main(void){
     button_init();
     oled_init();
     timer_init();
-    oled_clear_all_SRAM();
-    menu_init();
     SPI_init();
     MCP_init();
     CAN_init();
-    //SPI_test_loop();
-    /*uint64_t data = 0xFF00FF00FF00FF00;
-    MCP_send_single_data_byte(MCP_TXB0CTRL, 3);
-    MCP_load_TX_buffer(data);*/
-    //Can_block my_can_block = {1, 3, { 0xFF, 0xAA, 0x00}};
-    //CAN_reset_interrupt_flag();
+    oled_clear_all_SRAM();
+    menu_init();
+
     while(1){
-        joystick_send();
-        touch_send();
-        printf("test\r\n");
+        //joystick_send();
+        //touch_send();
         menu_loop();
+
+
         //testFunction_2();
         //Can_block recieved_can_block = CAN_recieve(1);
         //printf("Can: %d\r\n", recieved_can_block.data[1]);
@@ -108,10 +104,9 @@ ISR(TIMER1_COMPA_vect)    //interrupt routine to update oled-display at fixed in
 
 
 ISR(INT0_vect){
-    Can_block my_other_can_block = CAN_recieve(1);/*
-    char number[6];
-    number = utoa(my_other_can_block.data[0], 6, 10);*/
-    oled_print_string_SRAM("Hei!");
+    Can_block my_other_can_block = CAN_recieve(1);
+    oled_clear_all_SRAM();
+    oled_print_string_SRAM("Score is: ");
     oled_print_string_SRAM(utoa(my_other_can_block.data[0], 6, 10));
 
 }

@@ -16,16 +16,15 @@
 #define MOTOR_INIT_SPEED 100
 #define ENCODER_SCALER 39
 
-#define T_POS   1/50
+#define T   1/50
 #define KP_POS  3
 #define KI_POS  1
 #define KD_POS  3
 
-#define T_SAMPLE  0.0000001
-#define T_SPEED   0.1
-#define KP_SPEED  0.7
-#define KI_SPEED  0
-#define KD_SPEED  0
+
+#define KP_SPEED  2
+#define KI_SPEED  0.5
+#define KD_SPEED  1
 
 
 void motor_init(){
@@ -100,7 +99,7 @@ void position_regulator(uint8_t ref_position){
     int derivative = error - prev_error;
     integrator += error;
 
-    int new_speed = KP_POS*error + (int)(KI_POS*T_POS*integrator) + KD_POS/T_POS*derivative;
+    int new_speed = KP_POS*error + (int)(KI_POS*T*integrator) + KD_POS/T*derivative;
 
     if (new_speed < 0){
         motor_set_direction_left();
@@ -120,24 +119,15 @@ void speed_regulator(int8_t ref_speed){
     static int prev_error = 0;
 
     uint8_t position = (uint8_t)(encoder_read()/ENCODER_SCALER);
-    int8_t speed = (int8_t)((position - prev_position)/(T_SAMPLE));
+    int8_t speed = (int8_t)(position - prev_position);
 
     int error = ref_speed - speed;
     int derivative = error - prev_error;
-    integrator += T_SPEED*error;
+    integrator += error;
 
-    int8_t new_speed = KP_SPEED*error + T_SPEED*KI_SPEED*integrator + KD_SPEED/T_SPEED*derivative;
+    int8_t new_speed = KP_SPEED*error + T*KI_SPEED*integrator + KD_SPEED/T*derivative;
 
     motor_set_speed(new_speed);
     prev_position = position;
     prev_error = error;
-
-    //printf("Old pos: %d\n\r", prev_pos);
-    //printf("New pos: %d\n\r", pos);
-    printf("Error: %d\t", error);
-    printf("Integrator: %d\t", integrator);
-    //printf("Ref speed: %d\n\r", ref_speed);
-    //printf("Act speed: %d\n\r", speed);
-    printf("Set speed: %d\n\r", new_speed);
-    //printf("-------\n\r");
 }

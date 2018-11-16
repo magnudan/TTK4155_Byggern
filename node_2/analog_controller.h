@@ -11,3 +11,5 @@ uint8_t analog_controller_get_left();
 uint8_t analog_controller_get_up();
 uint8_t analog_controller_get_right();
 uint8_t analog_controller_get_button();
+
+void analog_speed_control();

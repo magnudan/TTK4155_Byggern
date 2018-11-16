@@ -10,7 +10,6 @@ void CAN_init(void){
 
     MCP_bit_modify(MCP_RXB0CTRL, MCP_RX_BUFF_OP_MODE_BITS, 0xFF);
     MCP_send_single_data_byte(MCP_CANCTRL, MODE_NORMAL);
-
     CAN_message_interrupt_init();
 
 
@@ -76,9 +75,9 @@ void CAN_reset_interrupt_flag(){
 
 void CAN_message_interrupt_init(){
     MCP_bit_modify(MCP_CANINTE, MCP_RX_BUFF0_FULL_ENABLE, 0xFF);   //Interupt enable
-    GICR = (1 << INT0);
-    MCUCR = (1 << ISC01) | ~(1 << ISC00);
-    PORTD = (1 << PD2);
+    write_bit(1, GICR, INT0);
+    write_bit(0, MCUCR, ISC00);
+    write_bit(0, MCUCR, ISC01);
+    write_bit(0, DDRD, PIND2);
     sei();
-
 }
