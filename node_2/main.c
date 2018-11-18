@@ -43,22 +43,17 @@ void main(){
 
 
     solenoid_init();
-    //encoder_init();
     score_counter_init();
     analog_controller_init();
     while(1){
-
-      //printf("Data from CAN: %d\r\n", encoder_read() << 8 + encoder_read());
-
-
-
+      //cli();
       //printf("Score: \r\n",score_counter_get());
       //printf("Score: %d\r\n", score_counter_get());
 
       //printf("Button: %d Up: %d Right: %d Down: %d Left: %d\r\n", analog_controller_get_button(), analog_controller_get_up(), analog_controller_get_right(), analog_controller_get_down(), analog_controller_get_left());
-      score_counter_update();
-      _delay_ms(50);
-
+      //analog_speed_control();
+      //score_counter_update();
+      _delay_ms(2);
   }
 }
 

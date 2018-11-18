@@ -10,7 +10,7 @@
 #define OCR1A_MIN 1844
 #define OCR1A_MAX 4300
 
-
+uint8_t PWM_angle;
 
 //opens pwm on PB5
 void PWM_init(){
@@ -35,11 +35,35 @@ void PWM_init(){
     ICR1 =  0x9FFF;
 
     //initialize to idle position
-    PWM_set_angle(128);
+    PWM_angle = 128;
+    PWM_set_angle(PWM_angle);
+
 }
 
 //takes a value between 0 and 255
 void PWM_set_angle(uint8_t angle){
     //m A gI C   N u M b e e R S
     OCR1A = PWM_SCALER*angle+OCR1A_MIN;
+}
+
+void PWM_move_left(uint8_t signal){
+    if (signal == 1){
+      if (PWM_angle < 1){
+        PWM_angle = 0;
+      } else {
+        PWM_angle --;
+      }
+      PWM_set_angle(PWM_angle);
+    }
+}
+
+void PWM_move_right(uint8_t signal){
+  if (signal == 1){
+    if (PWM_angle > 254){
+      PWM_angle = 255;
+    } else {
+      PWM_angle ++;
+    }
+    PWM_set_angle(PWM_angle);
+  }
 }

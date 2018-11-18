@@ -5,9 +5,9 @@
 #include "pwm.h"
 
 #define DOWN_PIN   PA0
-#define LEFT_PIN   PA2
+#define LEFT_PIN   PA6
 #define UP_PIN     PA4
-#define RIGHT_PIN  PA6
+#define RIGHT_PIN  PA2
 #define BUTTON_PIN PC7
 
 void analog_controller_init(){
@@ -48,26 +48,20 @@ uint8_t analog_controller_get_button(){
 
 
 void analog_speed_control(){
-    solenoid_punch(analog_controller_get_button);
-    if(analog_controller_get_left){
+    solenoid_punch(analog_controller_get_button());
+    if(analog_controller_get_left()){
+      printf("Zoop\r\n");
       speed_regulator(100);
       motor_set_direction_left();
     }
-    else if(analog_controller_get_right){
+    else if(analog_controller_get_right()){
+      printf("loop\r\n");
       speed_regulator(100);
       motor_set_direction_right();
     }
     else{
       speed_regulator(0);
     }
-    if(analog_controller_get_up){
-      //PWM_set_angle(0);
-    }
-    else if(analog_controller_get_down){
-      //PWM_set_angle(255);
-    }
-    else{
-      //PWM_set_angle(128);
-    }
-
+    PWM_move_left(analog_controller_get_down());
+    PWM_move_right(analog_controller_get_up());
 }

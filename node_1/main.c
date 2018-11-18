@@ -39,17 +39,10 @@ void print_multifunction_card(){
 }
 
 void testFunction_2(){
-    //oled_clear_all();
     _delay_ms(100);
-    oled_pos(0, 0);
+    oled_home();
     char test[] = "Hello, laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaang tekst!\0";
-    //oled_print_string(test);
     oled_print_string_SRAM(test);
-    //oled_print_string((char)(button_read(BUTTON_JOYSTICK)));
-    _delay_ms(500);
-    //oled_print_string_SRAM("DETTTE");
-    oled_refresh_display();
-    _delay_ms(1000);
 }
 
 void testFunction_3(){
@@ -69,7 +62,10 @@ int main(void){
     volatile char *ext_oledd = (char *) OLEDD_START_ADDR;
     volatile char *ext_test = (char *) 0x0000;
 
+    write_bit(1, DDRE, PE2);
+
     uart_init();
+    /*
     SRAM_init();
     SRAM_test();
     adc_init();
@@ -81,16 +77,23 @@ int main(void){
     CAN_init();
     oled_clear_all_SRAM();
     menu_init();
+*/
 
     while(1){
         //joystick_send();
         //touch_send();
-        menu_loop();
+        //menu_loop();
 
+        printf("%c", 0x55);
 
         //testFunction_2();
         //Can_block recieved_can_block = CAN_recieve(1);
         //printf("Can: %d\r\n", recieved_can_block.data[1]);
+
+        write_bit(1, PORTE, PE2);
+        _delay_ms(500);
+        write_bit(0, PORTE, PE2);
+        _delay_ms(500);
     }
 
 }
