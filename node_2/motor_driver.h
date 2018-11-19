@@ -20,4 +20,4 @@ void solenoid_punch(int signal);
 
 //Discrete implementations of PID-regulators
 void position_regulator(uint8_t ref_position);
-void speed_regulator(int8_t ref_speed);
+void speed_regulator(int8_t ref_speed, int8_t direction);

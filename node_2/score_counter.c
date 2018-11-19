@@ -4,7 +4,7 @@
 #include <avr/io.h>
 
 #define DIODE_CONNECTION PF0
-#define DIODE_THRESHOLD 200
+#define DIODE_THRESHOLD 120
 
 enum State{IDLE, UPDATING};
 
@@ -33,11 +33,19 @@ void score_counter_reset(){
 
 void score_counter_update(){
     static enum State state = IDLE;
+    static uint8_t counter = 0;
     uint8_t diode_reading = diode_read();
     if ((state == IDLE) && (diode_reading < DIODE_THRESHOLD)){
-        state = UPDATING;
+        counter++;
+        if(counter ==  3){
+          state = UPDATING;
+        }
+    }
+    else if((state == IDLE)){
+      counter = 0;
+    }
+    else if ((state == UPDATING) && (diode_reading > DIODE_THRESHOLD)){
         score_counter_add();
-    } else if ((state == UPDATING) && (diode_reading > DIODE_THRESHOLD)){
         state = IDLE;
     }
 }

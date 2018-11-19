@@ -20,10 +20,12 @@
 #define JOYSTICK 1
 #define TOUCH 2
 #define RESET_NODE_2 3
-uint8_t wolol = 0;
-uint8_t run_motor_init = 1;
+enum STATE {STOP, RUN_POSITION, RUN_SPEED};
 
-uint8_t RUN_SPEED_CONTROL;
+
+uint8_t RUN_SPEED_CONTROL = 0;
+uint8_t position_reference = 0;
+enum STATE state = STOP;
 
 void main(){
     write_bit(1, DDRB, PB4);
@@ -39,25 +41,26 @@ void main(){
     SPI_init();
     MCP_init();
     CAN_init();
-    timer_init();
-
 
     solenoid_init();
     score_counter_init();
     analog_controller_init();
+    timer_init();
     while(1){
       //cli();
-      //printf("Score: \r\n",score_counter_get());
-      //printf("Score: %d\r\n", score_counter_get());
 
       //printf("Button: %d Up: %d Right: %d Down: %d Left: %d\r\n", analog_controller_get_button(), analog_controller_get_up(), analog_controller_get_right(), analog_controller_get_down(), analog_controller_get_left());
       //analog_speed_control();
-      //score_counter_update();
-      _delay_ms(2);
+      score_counter_update();
+      _delay_ms(100);
+      if(state == RUN_POSITION || state == RUN_SPEED){
+        Can_block score = {1, 2, {score_counter_get()}};
+        CAN_send(&score);
+      }
   }
 }
 
-uint8_t position_reference;
+
 
 ISR(INT2_vect){
     Can_block received_can_block = CAN_recieve(JOYSTICK);
@@ -78,27 +81,33 @@ ISR(INT2_vect){
             break;
         }
         case TOUCH :{
+            state = RUN_POSITION;
             int l_slider = received_can_block.data[1];
             int r_slider = received_can_block.data[2];
             position_reference = l_slider;
             //PWM_set_angle(r_slider);
+
             solenoid_punch(received_can_block.data[3]);
-            Can_block score = {1, 2, {score_counter_get()}};
-            CAN_send(&score);
+
+
             break;
         }
         case RESET_NODE_2 :{
-            write_bit(0, PORTB, PB4);
+            if(received_can_block.data[1] == 4 && received_can_block.data[2] == 5){
+              printf("CAN reset: \r\n");
+              write_bit(0, PORTB, PB4);
+            }
             break;
         }
         case 4:{
+          encoder_init();
           RUN_SPEED_CONTROL = 1;
-          printf("Test\r\n");
+          state = RUN_SPEED;
           break;
         }
         case 5:{
           RUN_SPEED_CONTROL = 0;
-          printf("Test2\r\n");
+          state = STOP;
           break;
         }
         default:
@@ -109,13 +118,12 @@ ISR(INT2_vect){
 
 
 ISR(TIMER3_COMPA_vect){
-    if(!RUN_SPEED_CONTROL){
-      position_regulator(position_reference);
 
+    if(state == RUN_POSITION){
+      position_regulator(position_reference);
     }
     else{
       analog_speed_control();
-      printf("testtest\r\n" );
     }
     TCNT3 = 0x0000;
 

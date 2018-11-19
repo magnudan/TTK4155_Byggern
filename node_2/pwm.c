@@ -48,10 +48,10 @@ void PWM_set_angle(uint8_t angle){
 
 void PWM_move_left(uint8_t signal){
     if (signal == 1){
-      if (PWM_angle < 1){
+      if (PWM_angle < 6){
         PWM_angle = 0;
       } else {
-        PWM_angle --;
+        PWM_angle -= 5;
       }
       PWM_set_angle(PWM_angle);
     }
@@ -59,10 +59,10 @@ void PWM_move_left(uint8_t signal){
 
 void PWM_move_right(uint8_t signal){
   if (signal == 1){
-    if (PWM_angle > 254){
+    if (PWM_angle > 249){
       PWM_angle = 255;
     } else {
-      PWM_angle ++;
+      PWM_angle += 5;
     }
     PWM_set_angle(PWM_angle);
   }

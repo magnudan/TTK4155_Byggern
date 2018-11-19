@@ -50,17 +50,13 @@ uint8_t analog_controller_get_button(){
 void analog_speed_control(){
     solenoid_punch(analog_controller_get_button());
     if(analog_controller_get_left()){
-      printf("Zoop\r\n");
-      speed_regulator(100);
-      motor_set_direction_left();
+      speed_regulator(30, -1);
     }
     else if(analog_controller_get_right()){
-      printf("loop\r\n");
-      speed_regulator(100);
-      motor_set_direction_right();
+      speed_regulator(30, 1);
     }
     else{
-      speed_regulator(0);
+      speed_regulator(0, 0);
     }
     PWM_move_left(analog_controller_get_down());
     PWM_move_right(analog_controller_get_up());
