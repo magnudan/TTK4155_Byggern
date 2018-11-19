@@ -10,7 +10,7 @@
 volatile char *ext_oledc = (char *) OLEDC_START_ADDR;
 volatile char *ext_oledd = (char *) OLEDD_START_ADDR;
 
-uint8_t page, col;
+uint8_t page = 0, col = 0;
 
 void oled_init(){
 
@@ -134,6 +134,7 @@ void oled_clear_all_SRAM()
             oled_write(0x00, column, row);
         }
     }
+    oled_home();
 }
 
 
