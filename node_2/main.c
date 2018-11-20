@@ -23,8 +23,9 @@
 #define CASE_4 4
 #define CASE_5 5
 
-enum STATE {STOP, RUN_POSITION, RUN_SPEED};
+enum STATE {STOP, RUN_POSITION, RUN_SPEED, RUN_UDP_SPEED};
 uint8_t position_reference = 0;
+char instruction;
 
 enum STATE state = STOP;
 
@@ -55,7 +56,7 @@ void main(){
       _delay_ms(100);
 
       // If a game is running, send score to node 1
-      if(state == RUN_POSITION || state == RUN_SPEED){
+      if(state != STOP){
         fail_counter_update();
       }
       else if(state == STOP){
@@ -105,6 +106,10 @@ ISR(INT2_vect){
           state = STOP;
           break;
         }
+        case 6:{
+            state = RUN_UDP_SPEED;
+            break;
+        }
         default:
             break;
     }
@@ -120,6 +125,56 @@ ISR(TIMER3_COMPA_vect){
     else if (state == RUN_SPEED){
       analog_speed_control();
     }
+    else if (state == RUN_UDP_SPEED){
+        switch(instruction){
+            case 'a':{
+                speed_regulator(30, -1);
+                break;
+            }
+            case 'b':{
+                speed_regulator(0, 0);
+                break;
+            }
+            case 'c':{
+                speed_regulator(30, 1);
+                break;
+            }
+            case 'd':{
+                speed_regulator(0, 0);
+                break;
+            }
+            case 'e':{
+                PWM_move_left(1);
+                break;
+            }
+            case 'f':{
+                PWM_move_left(0);
+                break;
+            }
+            case 'g':{
+                PWM_move_right(1);
+                break;
+            }
+            case 'h':{
+                PWM_move_right(0);
+                break;
+            }
+            case 'i':{
+                solenoid_punch(1);
+                break;
+            }
+            case 'j':{
+                solenoid_punch(0);
+                break;
+            }
+        }
+    }
+
+
     TCNT3 = 0x0000; // What is this?
 
+}
+
+ISR(USART0_RX_vect){
+    instruction = UDR0;
 }

@@ -46,7 +46,7 @@ void PWM_init(){
 //takes a value between 0 and 255
 void PWM_set_angle(uint8_t angle){
     //m A gI C   N u M b e e R S
-    OCR1A = PWM_SCALER*angle+OCR1A_MIN;
+    OCR1A = PWM_SCALER*(255-angle)+OCR1A_MIN;
 }
 
 void PWM_move_left(uint8_t signal){

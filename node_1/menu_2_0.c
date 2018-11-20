@@ -153,7 +153,7 @@ Menu game_menu =
     {
         {"Analog control",  NULL,       NULL},
         {"Digital control",             NULL,       NULL},
-        {NULL,    NULL,       NULL},
+        {"UDP control",    NULL,       NULL},
         {NULL,    NULL,       NULL},
         {NULL,    NULL,       NULL},
         {"Last number of fails",        NULL,       NULL},
@@ -214,7 +214,7 @@ void menu_init(){
 
     menu_link_to_function(&game_menu, 0, game_loop_position);
     menu_link_to_function(&game_menu, 1, game_loop_speed);
-    menu_link_to_function(&game_menu, 2, do_nothing);
+    menu_link_to_function(&game_menu, 2, game_loop_udp);
     menu_link_to_function(&game_menu, 3, do_nothing);
     menu_link_to_function(&game_menu, 4, do_nothing);
     menu_link_to_function(&game_menu, 5, game_write_fails_from_menu);

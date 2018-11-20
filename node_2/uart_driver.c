@@ -10,6 +10,7 @@ FILE *uart;
 void uart_init(){
     UBRR0H = (BAUDRATE >> 8);       // set high register of the baud rate register UBRR0
     UBRR0L = BAUDRATE;              // set low register of the baud rate register UBRR0
+    UCSR0B |= (1 << RXCIE0);
     UCSR0B |= (1 << TXEN0) | (1 << RXEN0);      //enable transmit and recieve
     UCSR0C |= (3 << UCSZ00) | (1<<USBS0); // Trasmit size 8 bit - 2 stop bits
 

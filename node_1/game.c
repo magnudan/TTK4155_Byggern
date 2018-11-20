@@ -64,7 +64,7 @@ void game_loop_position(void){
           touch_send();
           joystick_send();
           i++;
-          if(i > 1000){
+          if(i > 5000){
               cli();
               game_over();
               sei();
@@ -75,9 +75,6 @@ void game_loop_position(void){
 
 void game_loop_speed(){
     game_reset_fails();
-    //Can_block motor_init = {1, 3, {3, 4, 5}};
-    //CAN_send(&motor_init);
-    //delay_ms(10);
     Can_block speed_control = {1, 1,{4}};
     CAN_send(&speed_control);
     int test = 1;
@@ -85,7 +82,7 @@ void game_loop_speed(){
     while(1){
       _delay_ms(20);
       i++;
-      if(i > 1000){
+      if(i > 5000){
           printf("Test\r\n");
           Can_block time_out = {1, 1, {5}};
           CAN_send(&time_out);
@@ -95,6 +92,25 @@ void game_loop_speed(){
           return;
       }
     }
+}
 
-
+void game_loop_udp(){
+    game_reset_fails();
+    Can_block udp_control = {1, 1, {6}};
+    CAN_send(&udp_control);
+    int test = 1;
+    uint16_t i = 0;
+    while(1){
+        _delay_ms(20);
+        i++;
+        if(i > 5000){
+            printf("Test\r\n");
+            Can_block time_out = {1, 1, {5}};
+            CAN_send(&time_out);
+            cli();
+            game_over();
+            sei();
+            return;
+        }
+    }
 }

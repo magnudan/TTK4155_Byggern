@@ -11,3 +11,4 @@ void game_write_fails_from_menu();
 void game_increment_fails();
 void game_loop_position(void);
 void game_loop_speed(void);
+void game_loop_udp();
