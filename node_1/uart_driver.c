@@ -39,8 +39,6 @@ void uart_init()
 
     // Open a stream to use fprint function
     uart = fdevopen(&uart_transmit, &uart_recieve);
-
-    printf("UART initialized\r\n");
 }
 
 

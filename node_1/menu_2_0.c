@@ -4,6 +4,7 @@
 #include "game.h"
 #include "adc.h"
 #include "button.h"
+#include "java.h"
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
@@ -91,21 +92,21 @@ void menu_print()
 void menu_print_OLED()
 {
     cli();
-    oled_clear_all_SRAM();
+    oled_clear_display();
     oled_home();
     for(int i = 0; i<MAX_MENU_SIZE; i++)
     {
         if (i == current_menu -> current_menu_item)
         {
-            oled_print_string_SRAM(">");
+            oled_write_string(">");
         }
         else
         {
-            oled_print_string_SRAM(" ");
+            oled_write_string(" ");
         }
         if (current_menu -> menu_items[i].name != NULL)
         {
-            oled_print_string_SRAM(current_menu -> menu_items[i].name);
+            oled_write_string(current_menu -> menu_items[i].name);
         }
         oled_goto_line(i + 1);
     }
@@ -142,8 +143,8 @@ Menu game_menu =
     "Game menu:",
     &top_menu,
     {
-        {"With position control:",  NULL,       NULL},
-        {"With speed:", NULL,       NULL}
+        {"With position control",  NULL,       NULL},
+        {"With speed", NULL,       NULL}
         //{"sub menu item 3",   NULL,       NULL}
         //{"sub menu item 4",   NULL,       NULL}
         //{"sub menu item 5",   NULL,       NULL}
@@ -156,14 +157,15 @@ Menu coffee_menu =
     "Coffee menu:",
     &top_menu,
     {
-        {"Moccamaster on:",  NULL,       NULL},
-        {"Moccamaster off:", NULL,       NULL}
+        {"Coffee on",  NULL,       NULL},
+        {"Coffee off", NULL,       NULL}
         //{"sub menu item 3",   NULL,       NULL}
         //{"sub menu item 4",   NULL,       NULL}
         //{"sub menu item 5",   NULL,       NULL}
         //{"sub menu item 6",   NULL,       NULL}
     }
 };
+
 
 // Template for sub-menus
 /*
@@ -183,10 +185,14 @@ Menu sub_menu =
 */
 
 void menu_init(){
+    java_init();
     menu_link_to_function(&game_menu, 0, game_loop_position);
     menu_link_to_function(&game_menu, 1, game_loop_speed);
 
-    printf("Menu v.2 initialized\r\n");
+    menu_link_to_function(&coffee_menu, 0, java_make);
+    menu_link_to_function(&coffee_menu, 1, java_stop);
+
+    //printf("Menu v.2 initialized\r\n");
 }
 
 

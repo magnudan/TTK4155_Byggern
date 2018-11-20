@@ -19,6 +19,4 @@ void timer_init()
 
     // Enable compare match interrupt
     write_bit(1, TIMSK, OCIE1A);
-
-    printf("Timer initialized\r\n");
 }

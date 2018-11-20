@@ -7,8 +7,6 @@
 void MCP_init(){
     MCP_reset();
     //MCP_send_single_data_byte(MCP_CANCTRL, MODE_LOOPBACK);
-
-    printf("MCP initialized\r\n");
 }
 
 void MCP_reset(){
@@ -56,7 +54,6 @@ void MCP_read_RX_buffer(uint8_t data[], uint8_t length){
         //buffer_data |= (recieved_byte << (8*i));
     }
     SPI_deselect();
-    //return buffer_data;
 }
 
 

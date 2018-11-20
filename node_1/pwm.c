@@ -21,9 +21,6 @@ void pwm_init(){
       //set clock source to CPU/64
       write_bit(1, TCCR3B, CS30);
       write_bit(1, TCCR3B, CS31);
-      //write_bit(1, TCCR3B, CS32);
 
       ICR3 =  0xFFFF;
-
-      printf("PWM initialized\r\n");
 }

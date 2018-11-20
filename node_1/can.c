@@ -12,7 +12,7 @@ void CAN_init(void){
     MCP_send_single_data_byte(MCP_CANCTRL, MODE_NORMAL);
     CAN_message_interrupt_init();
 
-    printf("CAN initialized\r\n");
+    //printf("CAN initialized\r\n");
 }
 
 int CAN_send(Can_block* can_block){
