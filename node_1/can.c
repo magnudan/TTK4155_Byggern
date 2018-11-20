@@ -12,7 +12,7 @@ void CAN_init(void){
     MCP_send_single_data_byte(MCP_CANCTRL, MODE_NORMAL);
     CAN_message_interrupt_init();
 
-
+    printf("CAN initialized\r\n");
 }
 
 int CAN_send(Can_block* can_block){
@@ -60,9 +60,11 @@ int CAN_clear_to_send(){
 
 int CAN_error(){
     if(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), MCP_TX_ERR_DETECTED_BIT)){
+        printf("CAN transmition failed. Transmitting error\r\n");
         return -1; //Error in TXREQ, transmitting error.
     }
     if(test_bit(MCP_read_single_data_byte(MCP_TXB0CTRL), MCP_MSG_LOST_ARB_BIT)){
+        printf("CAN transmition failed. Message lost in arbitration\r\n");
         return -2; // MLOA: message lost in arbritition.
     }
     return 0;

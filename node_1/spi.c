@@ -22,6 +22,8 @@ void SPI_init(void) {
 
 	//Enable SPI in master mode and set clock rate fosc/16
 	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
+
+	printf("SPI initialized\r\n");
 }
 
 void SPI_transmit_byte(uint8_t data_byte) {

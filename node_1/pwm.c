@@ -24,4 +24,6 @@ void pwm_init(){
       //write_bit(1, TCCR3B, CS32);
 
       ICR3 =  0xFFFF;
+
+      printf("PWM initialized\r\n");
 }

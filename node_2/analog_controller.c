@@ -24,6 +24,8 @@ void analog_controller_init(){
   write_bit(1, PORTA, UP_PIN);
   write_bit(1, PORTA, RIGHT_PIN);
   write_bit(1, PORTC, BUTTON_PIN);
+
+  printf("Analog controller initialized\r\n");
 }
 
 uint8_t analog_controller_get_down(){

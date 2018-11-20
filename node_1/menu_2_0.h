@@ -22,6 +22,7 @@ struct Menu
 
 Menu top_menu;
 Menu game_menu;
+Menu coffee_menu;
 
 void menu_enter();
 void menu_return();

@@ -14,6 +14,7 @@ void uart_init(){
     UCSR0C |= (3 << UCSZ00) | (1<<USBS0); // Trasmit size 8 bit - 2 stop bits
 
     uart = fdevopen(&uart_transmit, &uart_recieve);
+    printf("UART initialized\r\n");
 }
 
 int uart_transmit(char data, FILE *f){

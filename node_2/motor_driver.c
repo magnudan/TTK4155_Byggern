@@ -40,6 +40,8 @@ void motor_init(){
     _delay_ms(2000);
     encoder_init();
     motor_set_speed(MOTOR_STOP);
+    
+    printf("Motor driver initialized\r\n");
 }
 
 void motor_set_direction_left(){

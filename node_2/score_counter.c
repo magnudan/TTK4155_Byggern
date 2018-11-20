@@ -13,6 +13,7 @@ uint8_t score = 0;
 void score_counter_init(){
     write_bit(0, DDRF, DIODE_CONNECTION);
     score = 0;
+    printf("Score counter initialized\r\n");
 }
 
 uint16_t diode_read(){

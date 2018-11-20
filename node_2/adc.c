@@ -30,7 +30,7 @@ void adc_init(){
     write_bit(0, ADMUX, MUX2);
     write_bit(0, ADMUX, MUX3);
     write_bit(0, ADMUX, MUX4);
-
+    printf("ADC initialized\r\n");
 }
 
 uint16_t adc_read(){

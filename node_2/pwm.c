@@ -9,6 +9,8 @@
 #define PWM_SCALER 10
 #define OCR1A_MIN 1844
 #define OCR1A_MAX 4300
+#define PWM_INCREMENT 5
+
 
 uint8_t PWM_angle;
 
@@ -38,6 +40,7 @@ void PWM_init(){
     PWM_angle = 128;
     PWM_set_angle(PWM_angle);
 
+    printf("PWM initialized\r\n");
 }
 
 //takes a value between 0 and 255
@@ -48,10 +51,10 @@ void PWM_set_angle(uint8_t angle){
 
 void PWM_move_left(uint8_t signal){
     if (signal == 1){
-      if (PWM_angle < 6){
+      if (PWM_angle <= PWM_INCREMENT){
         PWM_angle = 0;
       } else {
-        PWM_angle -= 5;
+        PWM_angle -= PWM_INCREMENT;
       }
       PWM_set_angle(PWM_angle);
     }
@@ -59,10 +62,10 @@ void PWM_move_left(uint8_t signal){
 
 void PWM_move_right(uint8_t signal){
   if (signal == 1){
-    if (PWM_angle > 249){
+    if (PWM_angle >= 255 - PWM_INCREMENT){
       PWM_angle = 255;
     } else {
-      PWM_angle += 5;
+      PWM_angle += PWM_INCREMENT;
     }
     PWM_set_angle(PWM_angle);
   }

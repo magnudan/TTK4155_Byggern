@@ -6,6 +6,8 @@ void button_init(void){
     DDRB &= ~(1 << BUTTON_L); //set pin PB0 to input
     DDRB &= ~(1 << BUTTON_R); //set pin PB1 to input
     DDRB &= ~(1 << BUTTON_JOYSTICK); //set pin PB3 to input
+
+    printf("Buttons initialized\r\n");
 }
 
 // accepts BUTTON_L or BUTTON_R as input

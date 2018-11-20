@@ -42,6 +42,8 @@ void oled_init(){
     *ext_oledc = 0x10; //Set higher column start address*/
     oled_clear_all();
     oled_home();
+
+    printf("OLED initialized\r\n");
 }
 
 void oled_home(){

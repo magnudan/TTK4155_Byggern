@@ -127,9 +127,12 @@ Menu top_menu =
     "Top menu",
     NULL,
     {
-        {"Game!",               &game_menu,   NULL}
-        //{"top menu item 2",     NULL,       NULL},
-        //{"top menu item 3",     NULL,       NULL}
+        {"Game!",   &game_menu,     NULL},
+        {"Coffee",  &coffee_menu,   NULL}
+        //{"top menu item 3",   NULL,       NULL}
+        //{"top menu item 4",   NULL,       NULL}
+        //{"top menu item 5",   NULL,       NULL}
+        //{"top menu item 6",   NULL,       NULL}
     }
 };
 
@@ -139,15 +142,51 @@ Menu game_menu =
     "Game menu:",
     &top_menu,
     {
-        {"With position control:",     NULL,       NULL},
-        {"With speed:",     NULL,       NULL},
-        //{"sub menu item 3",     NULL,       NULL}
+        {"With position control:",  NULL,       NULL},
+        {"With speed:", NULL,       NULL}
+        //{"sub menu item 3",   NULL,       NULL}
+        //{"sub menu item 4",   NULL,       NULL}
+        //{"sub menu item 5",   NULL,       NULL}
+        //{"sub menu item 6",   NULL,       NULL}
     }
 };
+
+Menu coffee_menu =
+{
+    "Coffee menu:",
+    &top_menu,
+    {
+        {"Moccamaster on:",  NULL,       NULL},
+        {"Moccamaster off:", NULL,       NULL}
+        //{"sub menu item 3",   NULL,       NULL}
+        //{"sub menu item 4",   NULL,       NULL}
+        //{"sub menu item 5",   NULL,       NULL}
+        //{"sub menu item 6",   NULL,       NULL}
+    }
+};
+
+// Template for sub-menus
+/*
+Menu sub_menu =
+{
+    "Sub menu:",
+    &top_menu,
+    {
+        //{"sub menu item 1",   NULL,       NULL},
+        //{"sub menu item 2",   NULL,       NULL}
+        //{"sub menu item 3",   NULL,       NULL}
+        //{"sub menu item 4",   NULL,       NULL}
+        //{"sub menu item 5",   NULL,       NULL}
+        //{"sub menu item 6",   NULL,       NULL}
+    }
+};
+*/
 
 void menu_init(){
     menu_link_to_function(&game_menu, 0, game_loop_position);
     menu_link_to_function(&game_menu, 1, game_loop_speed);
+
+    printf("Menu v.2 initialized\r\n");
 }
 
 

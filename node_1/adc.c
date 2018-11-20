@@ -8,6 +8,8 @@ volatile char *ext_adc = (char *) 0x1400;
 void adc_init(void){
     DDRB &= ~(1 << PB2); //set pin PB2 to input to be used as interrupt for ADC
     //PORTB1 |= (1<< PB2); //enable internal pull-up-resistor
+
+    printf("ADC initialized\r\n");
 }
 
 int adc_read_channel(unsigned int channel){

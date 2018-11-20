@@ -12,6 +12,7 @@ void MCP_reset(){
     SPI_transmit_byte(MCP_RESET);
     SPI_deselect();
     _delay_ms(200);
+    printf("MCP initialized\r\n");
 }
 
 void MCP_send_single_data_byte(uint8_t address, uint8_t command){

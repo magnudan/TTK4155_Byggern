@@ -19,6 +19,7 @@ void encoder_init(){
     DDRK &= 0; //Set all ports in K-register to read
 
     _delay_ms(20);
+    printf("Encoder initialized\r\n");
 }
 
 int16_t encoder_read(){

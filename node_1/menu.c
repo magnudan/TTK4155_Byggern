@@ -35,6 +35,7 @@ Node node02 = {"menu option 02", &node0, &node0, &node01, &node01};
 
 void init_menu(){
 	current_node = &node0;
+	printf("Menu v.1 initialized\r\n");
 }
 
 

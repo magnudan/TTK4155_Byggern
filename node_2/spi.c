@@ -31,6 +31,7 @@ void SPI_init() {
 	//write_bit(1, SPCR, MSTR);
 	//write_bit(1, SPCR, SPR0);
 	SPCR = (1<<SPE) | (1<<MSTR) | (1<<SPR0);
+	printf("SPI initialized\r\n");
 }
 
 void SPI_transmit_byte(uint8_t data_byte) {

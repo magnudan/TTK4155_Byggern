@@ -14,6 +14,7 @@ void DAC_init(){
     TWI_Master_Initialise();
     set_bit(PORTD, PD2);
     set_bit(PORTD, PD1);
+    printf("DAC initialized\r\n");
 }
 
 

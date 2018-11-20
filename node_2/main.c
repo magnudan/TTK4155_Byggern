@@ -20,6 +20,9 @@
 #define JOYSTICK 1
 #define TOUCH 2
 #define RESET_NODE_2 3
+#define CASE_4 4
+#define CASE_5 5
+
 enum STATE {STOP, RUN_POSITION, RUN_SPEED};
 
 
@@ -29,7 +32,7 @@ enum STATE state = STOP;
 
 void main(){
     write_bit(1, DDRB, PB4);
-    write_bit(1, PORTB, PB4);
+    write_bit(1, PORTB, PB4); //??
     adc_init();
     uart_init();
     PWM_init();
@@ -47,12 +50,12 @@ void main(){
     analog_controller_init();
     timer_init();
     while(1){
-      //cli();
 
-      //printf("Button: %d Up: %d Right: %d Down: %d Left: %d\r\n", analog_controller_get_button(), analog_controller_get_up(), analog_controller_get_right(), analog_controller_get_down(), analog_controller_get_left());
-      //analog_speed_control();
+
       score_counter_update();
       _delay_ms(100);
+
+      // If a game is running, send score to node 1
       if(state == RUN_POSITION || state == RUN_SPEED){
         Can_block score = {1, 2, {score_counter_get()}};
         CAN_send(&score);
@@ -61,7 +64,7 @@ void main(){
 }
 
 
-
+// Short description of what the interrupt routine does
 ISR(INT2_vect){
     Can_block received_can_block = CAN_recieve(JOYSTICK);
     switch (received_can_block.data[0]) {
@@ -70,14 +73,8 @@ ISR(INT2_vect){
             int x_pos = received_can_block.data[1];
             int y_pos = received_can_block.data[2];
             int joystick_button = received_can_block.data[3];
-            //printf("X-position: \t%d | Y-position: %d\r\n",x_pos, y_pos);
             PWM_set_angle(x_pos);
-            if (joystick_button == 1){
-                score_counter_reset();
-            }
 
-            //motor_set_speed_from_joystick(x_pos);
-            //solenoid_punch(received_can_block.data[3]);
             break;
         }
         case TOUCH :{
@@ -85,7 +82,6 @@ ISR(INT2_vect){
             int l_slider = received_can_block.data[1];
             int r_slider = received_can_block.data[2];
             position_reference = l_slider;
-            //PWM_set_angle(r_slider);
 
             solenoid_punch(received_can_block.data[3]);
 
@@ -94,18 +90,19 @@ ISR(INT2_vect){
         }
         case RESET_NODE_2 :{
             if(received_can_block.data[1] == 4 && received_can_block.data[2] == 5){
+                // MAaaAGigGGc N U M B E R S
               printf("CAN reset: \r\n");
               write_bit(0, PORTB, PB4);
             }
             break;
         }
-        case 4:{
+        case CASE_4:{
           encoder_init();
           RUN_SPEED_CONTROL = 1;
           state = RUN_SPEED;
           break;
         }
-        case 5:{
+        case CASE_5:{
           RUN_SPEED_CONTROL = 0;
           state = STOP;
           break;
@@ -116,7 +113,7 @@ ISR(INT2_vect){
 
 }
 
-
+// Short description of what the interrupt routine does
 ISR(TIMER3_COMPA_vect){
 
     if(state == RUN_POSITION){
@@ -125,6 +122,6 @@ ISR(TIMER3_COMPA_vect){
     else{
       analog_speed_control();
     }
-    TCNT3 = 0x0000;
+    TCNT3 = 0x0000; // What is this?
 
 }
