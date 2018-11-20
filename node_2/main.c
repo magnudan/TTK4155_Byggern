@@ -49,6 +49,7 @@ void main(){
     analog_controller_init();
     timer_init();
 
+
     while(1){
 
 
@@ -82,10 +83,8 @@ ISR(INT2_vect){
         case TOUCH :{
             state = RUN_POSITION;
             int l_slider = received_can_block.data[1];
-            int r_slider = received_can_block.data[2];
             position_reference = l_slider;
             solenoid_punch(received_can_block.data[3]);
-
 
             break;
         }

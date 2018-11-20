@@ -7,6 +7,8 @@
 #include "button.h"
 
 uint8_t fails = 0;
+uint8_t timer = 100;
+
 
 void game_reset_fails(){
     fails = 0;
@@ -32,7 +34,7 @@ void game_over(){
         oled_write_line("Nice! Keep up the good work");
     }
     uint8_t last_button_state = button_read(BUTTON_JOYSTICK);
-    while (last_button_state != button_read(BUTTON_JOYSTICK)){
+    while (last_button_state == button_read(BUTTON_JOYSTICK)){
         _delay_ms(2);
     }
 }
@@ -56,20 +58,13 @@ void game_write_fails_from_menu(){
 
 void game_loop_position(void){
       game_reset_fails();
-      Can_block motor_init = {1, 3, {3, 4, 5}};
-      CAN_send(&motor_init);
-      uint16_t i = 0;
+      Can_block reset_node_2 = {1, 3, {3, 4, 5}};
+      CAN_send(&reset_node_2);
+      timer = 0;
       while(1){
-          _delay_ms(20);
-          touch_send();
           joystick_send();
-          i++;
-          if(i > 5000){
-              cli();
-              game_over();
-              sei();
-              return;
-          }
+          touch_send();
+          if(timer >= 30){return;}
       }
 }
 
@@ -77,20 +72,10 @@ void game_loop_speed(){
     game_reset_fails();
     Can_block speed_control = {1, 1,{4}};
     CAN_send(&speed_control);
-    int test = 1;
-    uint16_t i = 0;
+    timer = 0;
     while(1){
-      _delay_ms(20);
-      i++;
-      if(i > 5000){
-          printf("Test\r\n");
-          Can_block time_out = {1, 1, {5}};
-          CAN_send(&time_out);
-          cli();
-          game_over();
-          sei();
-          return;
-      }
+        _delay_ms(100);
+        if(timer >= 30){return;}
     }
 }
 
@@ -98,19 +83,20 @@ void game_loop_udp(){
     game_reset_fails();
     Can_block udp_control = {1, 1, {6}};
     CAN_send(&udp_control);
-    int test = 1;
-    uint16_t i = 0;
+    timer = 0;
     while(1){
-        _delay_ms(20);
-        i++;
-        if(i > 5000){
-            printf("Test\r\n");
-            Can_block time_out = {1, 1, {5}};
-            CAN_send(&time_out);
-            cli();
-            game_over();
-            sei();
-            return;
-        }
+        _delay_ms(100);
+        if(timer >= 30){return;}
+    }
+}
+
+
+ISR(TIMER3_COMPA_vect){
+    timer++;
+    TCNT3 = 0x00;
+    if(timer == 30){
+        Can_block time_out = {1, 1, {4}};
+        CAN_send(&time_out);
+        game_over();
     }
 }

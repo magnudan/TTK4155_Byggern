@@ -75,6 +75,7 @@ int main(void){
     menu_init();
     sei();
     oled_clear_display();
+    game_timer_init();
 
     while(1){
         //joystick_send();
