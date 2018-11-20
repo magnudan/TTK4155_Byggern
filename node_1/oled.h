@@ -21,15 +21,6 @@ void oled_clear_line(uint8_t line);
 
 void oled_goto_pos(uint8_t row, uint8_t column);
 
-//void oled_print_char(char c);
-
-//void oled_print_string(char cstring[]);
-
-
-//void oled_print_char_negative(char c);
-
-//void oled_print_string_negative(char cstring[]);
-
 void oled_clear_display();
 
 void oled_write_byte(unsigned int data, int col, int row);
