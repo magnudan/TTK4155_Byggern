@@ -13,9 +13,9 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "timer.h"
-#include <stdlib.h>
 #include <util/delay.h>
 #include "pwm.h"
+#include "game.h"
 /*
 void print_multifunction_card(){
     volatile char readout[] = " ";
@@ -79,15 +79,9 @@ int main(void){
     while(1){
         //joystick_send();
         //touch_send();
-        //printf("Henlo\r\n");
         menu_loop();
-        //oled_print_string_SRAM("H");
-        //oled_refresh_display();
         //_delay_ms(500);
-        //printf("zooplooop\r\n");
-        //testFunction_2();
-        //Can_block recieved_can_block = CAN_recieve(1);
-        //printf("Can: %d\r\n", recieved_can_block.data[1]);
+
     }
 
 }
@@ -99,10 +93,10 @@ ISR(TIMER1_COMPA_vect)    //interrupt routine to update oled-display at fixed in
     TCNT1 = 0x00;
 }
 
-ISR(INT0_vect){
-    Can_block my_other_can_block = CAN_recieve(1);
-    oled_clear_display();
-    oled_write_string("Score is: ");
-    oled_write_string(utoa(my_other_can_block.data[0], 6, 10));
-
+ISR(INT0_vect){ //Interrupt routine to update number of "fails" in
+                //the game recieved by CAN from node 2
+    Can_block recieved_can_block = CAN_recieve(1);
+    if (recieved_can_block.data[0] == 1){
+        game_increment_fails();
+    }
 }

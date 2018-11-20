@@ -14,7 +14,7 @@
 #include "encoder.h"
 #include "adc.h"
 #include "timer.h"
-#include "score_counter.h"
+#include "fail_counter.h"
 #include "analog_controller.h"
 
 #define JOYSTICK 1
@@ -24,10 +24,8 @@
 #define CASE_5 5
 
 enum STATE {STOP, RUN_POSITION, RUN_SPEED};
-
-
-uint8_t RUN_SPEED_CONTROL = 0;
 uint8_t position_reference = 0;
+
 enum STATE state = STOP;
 
 void main(){
@@ -46,19 +44,23 @@ void main(){
     CAN_init();
 
     solenoid_init();
-    score_counter_init();
+    fail_counter_init();
     analog_controller_init();
     timer_init();
+
     while(1){
 
 
-      score_counter_update();
+
       _delay_ms(100);
 
       // If a game is running, send score to node 1
       if(state == RUN_POSITION || state == RUN_SPEED){
-        Can_block score = {1, 2, {score_counter_get()}};
-        CAN_send(&score);
+        fail_counter_update();
+      }
+      else if(state == STOP){
+          PWM_set_angle(128);
+          motor_set_speed(0);
       }
   }
 }
@@ -74,7 +76,6 @@ ISR(INT2_vect){
             int y_pos = received_can_block.data[2];
             int joystick_button = received_can_block.data[3];
             PWM_set_angle(x_pos);
-
             break;
         }
         case TOUCH :{
@@ -82,7 +83,6 @@ ISR(INT2_vect){
             int l_slider = received_can_block.data[1];
             int r_slider = received_can_block.data[2];
             position_reference = l_slider;
-
             solenoid_punch(received_can_block.data[3]);
 
 
@@ -98,12 +98,10 @@ ISR(INT2_vect){
         }
         case CASE_4:{
           encoder_init();
-          RUN_SPEED_CONTROL = 1;
           state = RUN_SPEED;
           break;
         }
         case CASE_5:{
-          RUN_SPEED_CONTROL = 0;
           state = STOP;
           break;
         }
@@ -119,7 +117,7 @@ ISR(TIMER3_COMPA_vect){
     if(state == RUN_POSITION){
       position_regulator(position_reference);
     }
-    else{
+    else if (state == RUN_SPEED){
       analog_speed_control();
     }
     TCNT3 = 0x0000; // What is this?

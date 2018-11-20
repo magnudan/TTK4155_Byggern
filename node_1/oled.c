@@ -42,7 +42,6 @@ void oled_init(){
     *ext_oledc = 0x00; //Set lower column start address
     *ext_oledc = 0x10; //Set higher column start address*/
     oled_clear_display();
-    oled_home();
 }
 
 void oled_home(){
@@ -61,6 +60,8 @@ void oled_home(){
 void oled_goto_line(uint8_t line){
     if(line > 7){
         printf("Error: line bigger than 7.\n\r");
+        //page = 0;
+        //*ext_oledc = 0xB0;
     }
     else {
         oled_home();
@@ -69,9 +70,17 @@ void oled_goto_line(uint8_t line){
     }
 }
 
+void oled_next_line(){
+    oled_goto_line(page + 1);
+}
+
 void oled_goto_column(uint8_t column){
     if(column > 127){
         printf("Error: column bigger than 127.\n\r");
+        //col = 0;
+        //*ext_oledc = 0x21;
+        //*ext_oledc = 0x00;
+        //*ext_oledc = 0x7F;
     }
     else{
         col = column;
@@ -79,6 +88,10 @@ void oled_goto_column(uint8_t column){
         *ext_oledc = 0x00 + column;
         *ext_oledc = 0x7F;
     }
+}
+
+void oled_next_column(){
+    oled_goto_column(col + 1);
 }
 
 void oled_goto_pos(uint8_t row,uint8_t column){
@@ -99,7 +112,7 @@ void oled_clear_display()
     {
         for(uint32_t column = 0; column<128; column++)
         {
-            oled_write_byte(0x00, column, row);
+            oled_write_column(0x00, column, row);
         }
     }
     oled_home();
@@ -110,7 +123,7 @@ void oled_write_char(char c){
         oled_goto_line(page +1);
     }
     for(unsigned int bit = 0; bit < 8; bit++){
-        oled_write_byte(pgm_read_byte(&font8[c][bit]), col, page);
+        oled_write_column(pgm_read_byte(&font8[c][bit]), col, page);
         oled_goto_column(col + 1);
     }
 }
@@ -129,7 +142,7 @@ void oled_write_line(char cstring[]){
 }
 
 
-void oled_write_byte(unsigned int data, int column, int row){
+void oled_write_column(unsigned int data, int column, int row){
     unsigned int SRAM_adress = column + (row * 128) + 1024;
     SRAM_write(SRAM_adress, data);
 }
@@ -150,24 +163,4 @@ void oled_refresh_display(){
 
     oled_home();
     sei();
-}
-
-void oled_draw_line(int x0, int y0, int x1, int y1){
-  if ((x0 < 0) || y0 < 0 || x1 > 127 || y1 > 7){
-    printf("Error: line out of display\n\r");
-  }
-  else{
-    oled_goto_pos(x0, y0);
-    if(x1-x0 >= y1-y0){
-      for(int i = x0; i++; i < x1){
-        printf("Test");
-          oled_write_byte(0xFF, i,((y1-y0)/(x1-x0))*i+y0);
-      }
-    }
-    else{
-      for(int i = y0; i++; i < y1){
-        oled_write_byte(0xFF, ((x1-x0)/(y1-y0))*i+x0,i);
-      }
-    }
-  }
 }

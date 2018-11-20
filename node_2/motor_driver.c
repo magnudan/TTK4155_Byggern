@@ -17,9 +17,9 @@
 #define ENCODER_SCALER 39
 
 #define T   1/127
-#define KP_POS  3
-#define KI_POS  1
-#define KD_POS  20
+#define KP_POS  2
+#define KI_POS  0.5
+#define KD_POS  50
 
 
 #define KP_SPEED  4
@@ -40,7 +40,7 @@ void motor_init(){
     _delay_ms(2000);
     encoder_init();
     motor_set_speed(MOTOR_STOP);
-    
+
     printf("Motor driver initialized\r\n");
 }
 
@@ -54,7 +54,6 @@ void motor_set_direction_right(){
 
 void motor_set_speed(uint8_t speed){
     DAC_send(speed);
-    //printf("Motor speed is set to: %d\n\r", speed);
 }
 
 //To be used with the joystick from USB mulitfunction card.
@@ -103,7 +102,6 @@ void position_regulator(uint8_t ref_position){
     int new_speed = KP_POS*error + (int)(KI_POS*T*integrator) + KD_POS/T*derivative;
     //speed_regulator(abs(new_speed), new_speed);
 
-
     if (new_speed < 0){
       motor_set_direction_left();
     }
@@ -143,7 +141,6 @@ void speed_regulator(int8_t ref_speed, int8_t direction){
       else{
         motor_set_direction_left();
       }
-
     }
     int new_speed = KP_SPEED*error + (int8_t)T*KI_SPEED*integrator + (int8_t)KD_SPEED/T*derivative;
 

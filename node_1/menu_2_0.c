@@ -94,7 +94,6 @@ void menu_print_OLED()
 {
     cli();
     oled_clear_display();
-    oled_home();
     for(int i = 0; i<MAX_MENU_SIZE; i++)
     {
         if (i == current_menu -> current_menu_item)
@@ -152,12 +151,12 @@ Menu game_menu =
     "Game menu:",
     &top_menu,
     {
-        {"With position control",  NULL,       NULL},
-        {"With speed",             NULL,       NULL},
+        {"Analog control",  NULL,       NULL},
+        {"Digital control",             NULL,       NULL},
         {NULL,    NULL,       NULL},
         {NULL,    NULL,       NULL},
         {NULL,    NULL,       NULL},
-        {NULL,    NULL,       NULL},
+        {"Last number of fails",        NULL,       NULL},
     }
 };
 
@@ -218,7 +217,7 @@ void menu_init(){
     menu_link_to_function(&game_menu, 2, do_nothing);
     menu_link_to_function(&game_menu, 3, do_nothing);
     menu_link_to_function(&game_menu, 4, do_nothing);
-    menu_link_to_function(&game_menu, 5, do_nothing);
+    menu_link_to_function(&game_menu, 5, game_write_fails_from_menu);
 
     menu_link_to_function(&coffee_menu, 0, java_make);
     menu_link_to_function(&coffee_menu, 1, java_stop);
@@ -255,6 +254,6 @@ void menu_loop(){
         if(button_read(BUTTON_JOYSTICK)){
             menu_run_function();
         }
-        _delay_ms(100);
+        _delay_ms(150);
     }
 }

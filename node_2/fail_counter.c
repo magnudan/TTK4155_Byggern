@@ -1,6 +1,7 @@
-#include "score_counter.h"
+#include "fail_counter.h"
 #include "node_setup.h"
 #include "adc.h"
+#include "can.h"
 #include <avr/io.h>
 
 #define DIODE_CONNECTION PF0
@@ -8,11 +9,13 @@
 
 enum State{IDLE, UPDATING};
 
-uint8_t score = 0;
+uint8_t fails = 0;
 
-void score_counter_init(){
+Can_block fail = {1, 2, {1}};
+
+void fail_counter_init(){
     write_bit(0, DDRF, DIODE_CONNECTION);
-    score = 0;
+    fails = 0;
     printf("Score counter initialized\r\n");
 }
 
@@ -20,19 +23,19 @@ uint16_t diode_read(){
     return adc_read();
 }
 
-void score_counter_add(){
-    score ++;
+void fail_counter_add(){
+    fails ++;
 }
 
-uint8_t score_counter_get(){
-    return score;
+uint8_t fail_counter_get(){
+    return fails;
 }
 
-void score_counter_reset(){
-    score = 0;
+void fail_counter_reset(){
+    fails = 0;
 }
 
-void score_counter_update(){
+void fail_counter_update(){
     static enum State state = IDLE;
     static uint8_t counter = 0;
     uint8_t diode_reading = diode_read();
@@ -46,7 +49,8 @@ void score_counter_update(){
       counter = 0;
     }
     else if ((state == UPDATING) && (diode_reading > DIODE_THRESHOLD)){
-        score_counter_add();
+        fail_counter_add();
+        CAN_send(&fail);
         state = IDLE;
     }
 }
