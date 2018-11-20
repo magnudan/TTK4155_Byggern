@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <avr/io.h>
 #include <stdint.h>
+#include <avr/interrupt.h>
 
 
 // Globals define
@@ -16,24 +17,24 @@ FILE *uart;
 void uart_init()
 {
     // Set the high and low baudrate registers to reflect the BAUD defined
-    //UBRR0H = (BAUDRATE >> 8);
-    //UBRR0L = BAUDRATE;
-    write_bit(0, UCSR0C, URSEL0);
-    UBRR0H = 0x00;
-    UBRR0L = 0x1F;  // = 31
+    UBRR0H = (BAUDRATE >> 8);
+    UBRR0L = BAUDRATE;
+    //UBRR0H = 0x00;
+    //UBRR0L = 0x55;  // 0x1F = 31
 
 
+    // Set transmission size to 8 bits
+
+    //write_bit(1, UCSR0C, URSEL0);
+    //write_bit(1, UCSR0C, UCSZ00);
+    //write_bit(1, UCSR0C, UCSZ01);
+
+    // Set stop bits to 2 bits
+    //write_bit(1, UCSR0C, USBS0);
+    UCSR0C |= (1 << URSEL0) | (1 << USBS0) | (1 << UCSZ00)| (1 << UCSZ01);
     // Enable transmit and recieve
     write_bit(1, UCSR0B, TXEN0);
     write_bit(1, UCSR0B, RXEN0);
-
-    // Set transmission size to 8 bits
-    write_bit(1, UCSR0C, URSEL0);
-    write_bit(1, UCSR0C, UCSZ00);
-    write_bit(1, UCSR0C, UCSZ01);
-
-    // Set stop bits to 2 bits
-    write_bit(1, UCSR0C, USBS0);
 
 
     // Open a stream to use fprint function

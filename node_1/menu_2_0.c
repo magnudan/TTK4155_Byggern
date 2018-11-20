@@ -90,6 +90,8 @@ void menu_print()
 
 void menu_print_OLED()
 {
+    cli();
+    oled_clear_all_SRAM();
     oled_home();
     for(int i = 0; i<MAX_MENU_SIZE; i++)
     {
@@ -107,6 +109,7 @@ void menu_print_OLED()
         }
         oled_goto_line(i + 1);
     }
+    sei();
 }
 
 
@@ -150,10 +153,8 @@ void menu_init(){
 
 void menu_loop(){
     while(1){
-        cli();
-        oled_clear_all_SRAM();
+        //oled_clear_all_SRAM();
         menu_print_OLED();
-        sei();
         if (adc_read_channel(JOYSTICK_Y) < 40) {
             menu_down();
         }

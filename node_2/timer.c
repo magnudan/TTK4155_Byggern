@@ -12,7 +12,7 @@ void timer_init()
     write_bit(1, TCCR3B, CS30);
 
     // Set compare register to random value
-    OCR3A = 0x013B;
+    OCR3A = 0x007B;
 
     // Enable compare match interrupt
     write_bit(1, TIMSK3, OCIE3A);
